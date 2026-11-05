@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0b1015">
+    <link rel="manifest" href="manifest.json">
+    <title>اسمارٹ مسجد ڈیجیٹل گھڑی (Smart Mosque Digital Clock - 100% Offline)</title>
+    <style>
+        /* ==========================================================================
+           100% OFFLINE SELF-CONTAINED CSS & UTILITY ENGINE (NO EXTERNAL CDNs)
+           ========================================================================== */
+        :root, body.theme-0 {
+            --bg-main: #0b1015;
+            --bg-card: #141c24;
+            --bg-inner: #080c10;
+            --text-main: #e6edf3;
+            --text-muted: #9ca3af;
+            --accent-gold: #eab308;
+            --led-red: #ff3333;
+            --led-green: #22c55e;
+            --shadow-dark: #050709;
+            --shadow-light: #202c38;
+            --border-col: #2c3a47;
+            --frame-border: #85621e;
+        }
+        body.theme-1 {
+            --bg-main: #151005;
+            --bg-card: #221a09;
+            --bg-inner: #0d0a03;
+            --text-main: #fef3c7;
+            --text-muted: #d97706;
+            --accent-gold: #facc15;
+            --led-red: #ff3b30;
+            --led-green: #32d74b;
+            --shadow-dark: #080602;
+            --shadow-light: #362910;
+            --border-col: #6b5017;
+            --frame-border: #ca8a04;
+        }
+        body.theme-2 {
+            --bg-main: #05160e;
+            --bg-card: #0b2418;
+            --bg-inner: #030d08;
+            --text-main: #ecfdf5;
+            --text-muted: #6ee7b7;
+            --accent-gold: #fbbf24;
+            --led-red: #fb7185;
+            --led-green: #34d399;
+            --shadow-dark: #020805;
+            --shadow-light: #143d29;
+            --border-col: #19593c;
+            --frame-border: #10b981;
+        }
+        body.theme-3 {
+            --bg-main: #071020;
+            --bg-card: #0f1c34;
+            --bg-inner: #040912;
+            --text-main: #f0f9ff;
+            --text-muted: #93c5fd;
+            --accent-gold: #facc15;
+            --led-red: #f87181;
+            --led-green: #4ade80;
+            --shadow-dark: #03060d;
+            --shadow-light: #182e54;
+            --border-col: #224075;
+            --frame-border: #3b82f6;
+        }
+        body.theme-4 {
+            --bg-main: #18110f;
+            --bg-card: #261b18;
+            --bg-inner: #0f0a09;
+            --text-main: #f5f5f4;
+            --text-muted: #a8a29e;
+            --accent-gold: #f59e0b;
+            --led-red: #ef4444;
+            --led-green: #10b981;
+            --shadow-dark: #090605;
+            --shadow-light: #382824;
+            --border-col: #523934;
+            --frame-border: #d97706;
+        }
+        body.theme-5 {
+            --bg-main: #e2e8f0;
+            --bg-card: #f8fafc;
+            --bg-inner: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent-gold: #b45309;
+            --led-red: #dc2626;
+            --led-green: #15803d;
+            --shadow-dark: #cbd5e1;
+            --shadow-light: #ffffff;
+            --border-col: #94a3b8;
+            --frame-border: #b45309;
+        }
+        body.makruh-active {
+            --bg-main: #2b0808 !important;
+            --bg-card: #3a0c0c !important;
+        }
+        body.silent-mode-active {
+            --frame-border: #ef4444 !important;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Urdu Typesetting', 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 2.1;
+            margin: 0;
+            padding: 10px 8px 104px 8px;
+            transition: background-color 0.4s ease;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        button, input, select {
+            font-family: inherit;
+            color: inherit;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Offline Utility Classes (Replacing Tailwind CDN) */
+        .w-full { width: 100%; }
+        .max-w-md { max-width: 28rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .flex { display: flex; }
+        .inline-flex { display: inline-flex; }
+        .flex-col { flex-direction: column; }
+        .flex-wrap { flex-wrap: wrap; }
+        .items-center { align-items: center; }
+        .items-baseline { align-items: baseline; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .shrink-0 { flex-shrink: 0; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        .gap-1 { gap: 0.25rem; }
+        .gap-1\.5 { gap: 0.375rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-2\.5 { gap: 0.625rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-3\.5 { gap: 0.875rem; }
+        .gap-4 { gap: 1rem; }
+        .p-2 { padding: 0.5rem; }
+        .p-2\.5 { padding: 0.625rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-3\.5 { padding: 0.875rem; }
+        .p-4 { padding: 1rem; }
+        .px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+        .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+        .py-3\.5 { padding-top: 0.875rem; padding-bottom: 0.875rem; }
+        .pb-1 { padding-bottom: 0.25rem; }
+        .pb-2 { padding-bottom: 0.5rem; }
+        .pb-2\.5 { padding-bottom: 0.625rem; }
+        .pt-2\.5 { padding-top: 0.625rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-1\.5 { margin-bottom: 0.375rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-2\.5 { margin-bottom: 0.625rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-0\.5 { margin-top: 0.125rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-2\.5 { margin-top: 0.625rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .my-2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+        .mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
+        .ms-1 { margin-inline-start: 0.25rem; }
+        .ps-1 { padding-inline-start: 0.25rem; }
+        .text-center { text-align: center; }
+        .text-start { text-align: start; }
+        .text-end { text-align: end; }
+        .font-bold { font-weight: 700; }
+        .font-black { font-weight: 900; }
+        .text-\[10px\] { font-size: 10px; }
+        .text-\[11px\] { font-size: 11px; }
+        .text-xs { font-size: 0.78rem; }
+        .text-sm { font-size: 0.9rem; }
+        .text-base { font-size: 1.02rem; }
+        .text-lg { font-size: 1.15rem; }
+        .text-xl { font-size: 1.3rem; }
+        .text-2xl { font-size: 1.55rem; }
+        .text-4xl { font-size: 2.35rem; }
+        .leading-relaxed { line-height: 1.75; }
+        .leading-loose { line-height: 2.1; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .hidden { display: none !important; }
+        .block { display: block; }
+        .cursor-pointer { cursor: pointer; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-full { border-radius: 9999px; }
+        .border-b { border-bottom: 1px solid rgba(156, 163, 175, 0.25); }
+        .border-t { border-top: 1px solid rgba(156, 163, 175, 0.25); }
+
+        /* Color Utility Classes */
+        .text-yellow-400 { color: #facc15; }
+        .text-yellow-300 { color: #fde047; }
+        .text-amber-400 { color: #fbbf24; }
+        .text-amber-300 { color: #fcd34d; }
+        .text-emerald-400 { color: #34d399; }
+        .text-emerald-300 { color: #6ee7b7; }
+        .text-cyan-400 { color: #22d3ee; }
+        .text-cyan-300 { color: #67e8f9; }
+        .text-red-400 { color: #f87171; }
+        .text-red-300 { color: #fca5a5; }
+        .text-blue-300 { color: #93c5fd; }
+        .text-gray-200 { color: #e5e7eb; }
+        .text-gray-300 { color: #d1d5db; }
+        .text-gray-400 { color: var(--text-muted); }
+        .text-gray-500 { color: #6b7280; }
+        .text-black { color: #000000; }
+        .bg-emerald-400 { background-color: #34d399; }
+        .bg-emerald-500 { background-color: #10b981; }
+        .bg-amber-500 { background-color: #f59e0b; }
+        .bg-yellow-500 { background-color: #eab308; }
+        .bg-cyan-500 { background-color: #06b6d4; }
+        .bg-red-600 { background-color: #dc2626; }
+        .bg-gray-600 { background-color: #4b5563; }
+        .bg-gray-900 { background-color: #111827; color: #f9fafb; }
+        .w-2\.5 { width: 0.625rem; }
+        .h-2\.5 { height: 0.625rem; }
+        .w-4 { width: 1rem; }
+        .h-4 { height: 1rem; }
+        .w-5 { width: 1.25rem; }
+        .h-5 { height: 1.25rem; }
+        .w-20 { width: 5rem; }
+        .h-20 { height: 5rem; }
+        .fill-current { fill: currentColor; }
+
+        @media (min-width: 640px) {
+            .sm\:text-lg { font-size: 1.15rem; }
+            .sm\:text-xl { font-size: 1.3rem; }
+            .sm\:text-5xl { font-size: 2.9rem; }
+            .sm\:text-sm { font-size: 0.9rem; }
+            .sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+
+        /* Mosque Watermark & 3D Frame Styling */
+        .mosque-bg-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 380px;
+            height: 540px;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .app-layer {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .kalima-3d-banner {
+            background: linear-gradient(145deg, #1b2229, #0d1217);
+            border: 2px solid var(--frame-border);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.7), inset 0 2px 5px rgba(255,215,0,0.22), inset 0 -2px 6px rgba(0,0,0,0.85);
+            border-radius: 14px;
+            position: relative;
+        }
+        .kalima-arabic {
+            font-family: 'Amiri', 'Traditional Arabic', 'Scheherazade New', serif;
+            color: #fde047;
+            text-shadow: 0 2px 4px #000000, 0 0 12px rgba(250, 204, 21, 0.45);
+            letter-spacing: 0.5px;
+            line-height: 1.65;
+        }
+        .emboss-3d-text {
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.85), 0 -1px 1px rgba(255, 255, 255, 0.15);
+        }
+        .digital-font {
+            font-family: 'Orbitron', 'Courier New', Consolas, monospace;
+            letter-spacing: 1px;
+            line-height: 1.25;
+        }
+        .led-red {
+            color: var(--led-red);
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.45), 0 2px 3px rgba(0,0,0,0.85);
+        }
+        .led-green {
+            color: var(--led-green);
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.45), 0 2px 3px rgba(0,0,0,0.85);
+        }
+        .emboss-card {
+            background: var(--bg-card);
+            box-shadow: 6px 6px 13px var(--shadow-dark), -4px -4px 10px var(--shadow-light), inset 0 1px 1px rgba(255,255,255,0.08);
+            border-radius: 15px;
+            border: 1.5px solid var(--border-col);
+        }
+        .inner-box {
+            background: var(--bg-inner);
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+            border-radius: 11px;
+            border: 1px solid var(--border-col);
+        }
+        .spacious-input {
+            background: var(--bg-inner);
+            box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+            border-radius: 10px;
+            border: 1px solid var(--border-col);
+            min-height: 48px;
+            padding: 8px 12px !important;
+            line-height: 2.0 !important;
+            font-size: 0.85rem !important;
+            width: 100%;
+            color: var(--text-main);
+        }
+        .spacious-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+        .spacious-btn {
+            min-height: 44px;
+            padding: 8px 12px !important;
+            line-height: 1.9 !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .next-prayer-highlight {
+            border: 2px solid var(--led-green) !important;
+            box-shadow: 0 0 16px rgba(34, 197, 94, 0.35), inset 0 0 8px rgba(34, 197, 94, 0.12);
+        }
+        .silent-banner-box {
+            background: linear-gradient(135deg, #450a0a, #7f1d1d);
+            border: 2px solid #f87171;
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.5);
+            border-radius: 12px;
+        }
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            z-index: 100;
+            overflow-y: auto;
+            padding: 16px 12px;
+        }
+        .modal-box {
+            max-width: 440px;
+            margin: 12px auto;
+            padding: 18px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            background: var(--bg-card);
+            border-top: 1.5px solid var(--border-col);
+            box-shadow: 0 -5px 16px rgba(0,0,0,0.75);
+        }
+        .nav-tab-active {
+            color: #facc15 !important;
+            border-top: 3px solid #facc15;
+            background: rgba(250, 204, 21, 0.09);
+        }
+        .sect-deobandi   { color: #22c55e; }
+        .sect-barelvi    { color: #06b6d4; }
+        .sect-ahlehadith { color: #eab308; }
+        .sect-jafari     { color: #c084fc; }
+        .urdu-list li { margin-bottom: 10px; line-height: 2.1; }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        .animate-pulse { animation: pulseGlow 1.6s infinite ease-in-out; }
+    </style>
+</head>
+<body class="theme-0">
+
+    <!-- Background Mosque Silhouette -->
+    <svg class="mosque-bg-watermark" viewBox="0 0 200 300" fill="currentColor">
+        <path d="M100 10 C85 35 65 55 65 85 L65 115 L35 115 L35 300 L165 300 L165 115 L135 115 L135 85 C135 55 115 35 100 10 Z M100 135 C125 135 140 160 140 190 L140 285 L60 285 L60 190 C60 160 75 135 100 135 Z"/>
+        <rect x="12" y="45" width="14" height="255" rx="4"/>
+        <polygon points="19,20 10,45 28,45"/>
+        <rect x="174" y="45" width="14" height="255" rx="4"/>
+        <polygon points="181,20 172,45 190,45"/>
+    </svg>
+
+    <div class="app-layer">
+
+        <!-- 1. TOP ACTION HEADER -->
+        <div class="w-full max-w-md flex justify-between items-center mb-2.5 gap-1.5">
+            <div class="flex gap-1.5">
+                <button onclick="openModal('settings-modal')" class="inner-box px-3 py-1.5 text-xs font-bold text-yellow-400 flex items-center gap-1.5">
+                    ⚙️ <span id="lbl-settings">سیٹنگز</span>
+                </button>
+                <button onclick="openModal('help-modal')" class="inner-box px-2.5 py-1.5 text-xs font-bold text-cyan-400 flex items-center gap-1">
+                    ❓ <span id="lbl-help">رہنمائی</span>
+                </button>
+            </div>
+
+            <div class="flex gap-1.5">
+                <button onclick="triggerTestSilentMode()" class="inner-box px-2.5 py-1.5 text-xs font-bold text-red-400 flex items-center gap-1" title="Test Silent Alert">
+                    📵 <span id="lbl-test-silent">سائلنٹ ٹیسٹ</span>
+                </button>
+                <button onclick="cycleTheme()" class="inner-box px-2.5 py-1.5 text-xs font-bold text-amber-300">
+                    🎨 <span id="lbl-theme">رنگ</span>
+                </button>
+                <button onclick="toggleLanguage()" class="inner-box px-2.5 py-1.5 text-xs font-bold text-emerald-400 digital-font" id="btn-lang">
+                    EN
+                </button>
+            </div>
+        </div>
+
+        <!-- ACTIVE SILENT MODE / PRE-JAMAAT DND BANNER -->
+        <div id="silent-active-banner" class="w-full max-w-md silent-banner-box p-3 mb-2.5 text-center hidden">
+            <div class="flex justify-between items-center">
+                <span class="text-xs sm:text-sm font-bold text-yellow-300" id="silent-banner-title">📵 جماعت کا وقت — موبائل سائلنٹ موڈ فعال ہے</span>
+                <button onclick="dismissSilentBanner()" class="inner-box px-2 py-0.5 text-[11px] text-gray-200 font-bold">✕ بند کریں</button>
+            </div>
+            <p class="text-[11px] text-gray-200 mt-1 leading-relaxed" id="silent-banner-sub">
+                نماز کے احترام میں فون خاموش (Do Not Disturb) رکھا گیا ہے۔ نماز کے بعد خودکار نارمل ہو جائے گا۔
+            </p>
+        </div>
+
+        <!-- 2. 3D EMBOSSED KALIMA TAYYABA HEADER -->
+        <div class="w-full max-w-md kalima-3d-banner py-2 px-3 mb-2.5 text-center">
+            <div class="text-[11px] text-amber-300 kalima-arabic">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+            <div class="text-base sm:text-lg font-bold kalima-arabic">لَا إِلٰهَ إِلَّا اللّٰهُ مُحَمَّدٌ رَّسُولُ اللّٰهِ</div>
+        </div>
+
+        <!-- 3. MAIN 3D DIGITAL CLOCK & MOSQUE CARD -->
+        <div class="w-full max-w-md emboss-card p-4 mb-3 text-center">
+            <!-- Top Badges Row -->
+            <div class="flex justify-between items-center text-[11px] mb-2 px-1 gap-1">
+                <span id="status-badge" class="inner-box px-2.5 py-1 text-emerald-400 font-bold">● وقتِ نماز</span>
+                <span id="calendar-source-badge" onclick="openModal('settings-modal')" class="inner-box px-2.5 py-1 text-amber-300 font-bold cursor-pointer truncate">📜 نقشہ: جامعہ اشرفیہ لاہور</span>
+                <span id="mosque-role-badge" class="inner-box px-2 py-1 text-cyan-300 font-bold shrink-0">بنیادی مسجد</span>
+            </div>
+
+            <!-- Mosque Title + Switcher Button -->
+            <div class="flex flex-wrap justify-center items-center gap-2 mt-1 mb-1">
+                <h1 class="text-base sm:text-xl font-bold text-yellow-400 emboss-3d-text leading-loose py-0.5" id="active-mosque-heading">جامع مسجد ڈریم ایونیو رائے ونڈ روڈ لاہور (IMD)</h1>
+                <button onclick="openModal('mosque-switcher-modal')" class="inner-box px-3 py-1 text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                    🕌 <span id="lbl-switch-mosque">مسجد بدلیں (1+2)</span>
+                </button>
+            </div>
+            <p class="text-xs text-gray-400 mb-2.5 leading-relaxed" id="active-sect-subtitle">لاہور (دائمی نقشہ جامعہ اشرفیہ) • مسلکِ حنفی (دیوبندی)</p>
+
+            <!-- 3D Recessed Digital LED Clock -->
+            <div class="inner-box py-3.5 px-4 mb-3 flex justify-center items-baseline gap-2" dir="ltr">
+                <span id="clock-hm" class="digital-font led-red text-4xl sm:text-5xl font-black">00:00</span>
+                <span id="clock-sec" class="digital-font led-green text-xl font-bold">00</span>
+                <span id="clock-ampm" class="digital-font text-xs text-amber-400 font-bold">AM</span>
+            </div>
+
+            <!-- Next Jamaat & Countdown -->
+            <div class="flex justify-between items-center text-xs px-2 mb-3">
+                <div>
+                    <span class="text-gray-400" id="lbl-next-jamaat">اگلی جماعت:</span>
+                    <strong class="text-yellow-400 ms-1 text-sm emboss-3d-text" id="next-prayer-name">فجر</strong>
+                </div>
+                <div>
+                    <span class="text-gray-400" id="lbl-remaining">بقیہ وقت:</span>
+                    <strong class="digital-font led-green ms-1 text-sm" id="next-prayer-countdown" dir="ltr">00:00:00</strong>
+                </div>
+            </div>
+
+            <!-- Rotating Date Box (Gregorian / Hijri / Desi Bikrami) -->
+            <div onclick="rotateDateManual()" class="inner-box py-2 px-3.5 cursor-pointer flex justify-between items-center text-xs sm:text-sm font-bold">
+                <span id="date-type-label" class="text-amber-400 shrink-0">📅 عیسوی تاریخ</span>
+                <span id="date-value-text" class="text-center mx-2 leading-loose">جمعرات، 5 نومبر 2026ء</span>
+                <span id="date-counter-badge" class="text-[10px] text-gray-400 digital-font shrink-0">1/3</span>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 1: HOME (PRAYER TIMETABLE) ==================== -->
+        <div id="tab-home" class="w-full max-w-md">
+            <div class="emboss-card p-3.5 mb-3">
+                <div class="flex justify-between items-center mb-2.5 pb-2 border-b">
+                    <span class="text-xs font-bold text-yellow-400 emboss-3d-text" id="lbl-timetable-heading">نمازوں کا نظام الاوقات</span>
+                    <button onclick="toggleAzanDisplayMode()" class="inner-box px-2.5 py-1 text-[11px] font-bold text-amber-300" id="btn-azan-mode">
+                        🔄 موڈ: اذانِ مسجد + اول وقت
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-3 items-center mb-2 pb-1 text-xs">
+                    <span class="font-bold text-gray-400" id="col-prayer">نماز</span>
+                    <span class="font-bold text-red-400 text-center" id="col-azan">اذانِ مسجد (اول وقت)</span>
+                    <span class="font-bold text-emerald-400 text-end" id="col-jamaat">جماعت (مسجد)</span>
+                </div>
+
+                <div id="prayer-rows-container" class="flex flex-col gap-2.5"></div>
+
+                <!-- Dynamic Upcoming Jamaat Change Banner -->
+                <div class="inner-box p-2.5 mt-3 flex justify-between items-center text-xs">
+                    <div class="leading-relaxed">
+                        <span class="text-amber-400 font-bold">🔔 اگلی تبدیلی:</span>
+                        <span id="home-upcoming-change-text" class="text-gray-200 ms-1">9 نومبر سے عصر کی جماعت 03:45 PM پر ہوگی۔</span>
+                    </div>
+                    <button onclick="openModal('schedule-modal')" class="inner-box px-2 py-1 text-[10px] text-yellow-400 font-bold shrink-0">ترمیم</button>
+                </div>
+
+                <div class="mt-2.5 pt-2 border-t flex flex-col gap-2">
+                    <div class="text-center text-[11px] text-gray-400 leading-relaxed" id="lbl-tap-hint">
+                        💡 کسی بھی وقت پر ٹیپ کر کے وقت بدلیں۔ (ڈریم ایونیو مغرب جماعت: غروب کے 6 منٹ بعد — 3m اذان + 3m وقفہ)
+                    </div>
+                    <button onclick="openModal('yearly-modal')" class="inner-box py-2 px-3 text-xs font-bold text-cyan-300 w-full flex justify-center items-center gap-2">
+                        📅 <span id="lbl-yearly-btn">ڈریم ایونیو سالانہ بورڈ چارٹ / 12 ماہ کا شیڈول دیکھیں</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: SECTS COMPARISON ==================== -->
+        <div id="tab-sects" class="w-full max-w-md hidden">
+            <div class="emboss-card p-3.5 mb-3">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xs font-bold text-yellow-400" id="lbl-sect-table-title">تمام مسالک کے اول وقت اور جمعہ کا تقابلی نقشہ</h2>
+                    <span id="sect-engine-tag" class="text-[10px] text-amber-300 font-bold">لاہور دائمی نقشہ</span>
+                </div>
+
+                <div class="grid grid-cols-5 text-[11px] font-bold text-center border-b pb-2 mb-2 gap-1">
+                    <div class="text-gray-300">نماز</div>
+                    <div class="sect-deobandi">حنفی دیوبندی</div>
+                    <div class="sect-barelvi">حنفی بریلوی</div>
+                    <div class="sect-ahlehadith">اہلِ حدیث/شافعی</div>
+                    <div class="sect-jafari">فقہِ جعفریہ</div>
+                </div>
+
+                <div id="sect-comparison-rows" class="flex flex-col gap-2 text-center"></div>
+
+                <div class="inner-box p-3 mt-3 text-[11px] text-gray-300 leading-relaxed">
+                    <div class="font-bold text-yellow-400 mb-1">🕌 مسالک کے لحاظ سے جمعۃ المبارک کا معیاری وقت:</div>
+                    <div>• <strong class="sect-deobandi">حنفی دیوبندی:</strong> دوپہر 1:30 بجے (ڈریم ایونیو و دیگر مساجد)</div>
+                    <div>• <strong class="sect-barelvi">حنفی بریلوی:</strong> دوپہر 2:00 سے 2:30 بجے کے درمیان</div>
+                    <div>• <strong class="sect-ahlehadith">اہلِ حدیث / شافعی:</strong> دوپہر 1:00 بجے (اول وقت)</div>
+                    <div>• <strong class="sect-jafari">فقہِ جعفریہ:</strong> زوال کے بعد دوپہر 1:00 بجے</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: NAWAFIL, ISHRAQ, ZAWAL & HADITH ==================== -->
+        <div id="tab-nawafil" class="w-full max-w-md hidden">
+            <div class="emboss-card p-3.5 mb-3">
+                <h2 class="text-xs font-bold text-yellow-400 mb-2.5 text-center">☀️ سحری، اشراق، زوال اور جامعہ اشرفیہ کے حاشیہ اصول</h2>
+                <div class="grid grid-cols-2 gap-2.5 text-center text-xs">
+                    <div class="inner-box p-3">
+                        <div class="text-gray-400">ختمِ سحری (صبح صادق سے 2m قبل)</div>
+                        <div id="val-tahajjud" class="digital-font text-cyan-400 font-bold text-sm mt-1" dir="ltr">04:57 AM</div>
+                    </div>
+                    <div class="inner-box p-3">
+                        <div class="text-gray-400">طلوعِ آفتاب (مکروہ آغاز)</div>
+                        <div id="val-sunrise" class="digital-font text-amber-400 font-bold text-sm mt-1" dir="ltr">06:22 AM</div>
+                    </div>
+                    <div class="inner-box p-3">
+                        <div class="text-gray-400">نمازِ اشراق (طلوع کے 12m بعد)</div>
+                        <div id="val-ishraq" class="digital-font text-emerald-400 font-bold text-sm mt-1" dir="ltr">06:34 AM</div>
+                    </div>
+                    <div class="inner-box p-3">
+                        <div class="text-gray-400">زوالِ آفتاب (±5 منٹ مکروہ)</div>
+                        <div id="val-zawal" class="digital-font text-red-400 font-bold text-sm mt-1" dir="ltr">11:46 AM</div>
+                    </div>
+                </div>
+                <div class="inner-box p-3 mt-2.5 text-[11px] text-gray-300 leading-relaxed">
+                    <div>📌 <strong>حاشیہ جامعہ اشرفیہ لاہور:</strong></div>
+                    <div>1. صبح صادق سے 2 منٹ پہلے کھانا پینا بند کر دیا جائے (ختمِ سحری)۔</div>
+                    <div>2. طلوعِ آفتاب کے وقت سے 12 منٹ بعد نمازِ اشراق ادا کی جا سکتی ہے۔</div>
+                    <div>3. زوال کے وقت سے 5 منٹ پہلے اور 5 منٹ بعد تک کوئی نماز نہ پڑھی جائے۔ ظہر کا وقت زوال کے 5 منٹ بعد شروع ہوتا ہے۔</div>
+                    <div>4. مغرب کی نماز عشاء کا وقت شروع ہونے سے 3 منٹ پہلے تک بوقتِ مجبوری ادا کی جا سکتی ہے (<span id="val-maghrib-limit" class="digital-font text-amber-300" dir="ltr">06:30 PM</span>)۔</div>
+                </div>
+            </div>
+
+            <div class="emboss-card p-3.5">
+                <div class="flex justify-between items-center text-xs mb-1.5">
+                    <span class="text-amber-400 font-bold">📖 فضیلتِ نماز و حدیثِ نبوی ﷺ</span>
+                    <button onclick="nextSpiritualQuote()" class="inner-box px-3 py-1 text-[10px] text-gray-300">اگلی حدیث ⬅</button>
+                </div>
+                <p id="spiritual-arabic" class="text-center text-emerald-400 font-bold text-sm my-2 leading-loose kalima-arabic"></p>
+                <p id="spiritual-translation" class="text-center text-xs text-gray-200 leading-loose"></p>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: ANALOG CLOCKS ==================== -->
+        <div id="tab-analog" class="w-full max-w-md hidden">
+            <div class="emboss-card p-3.5 mb-3">
+                <h2 class="text-xs font-bold text-yellow-400 text-center mb-3">🕰️ روایتی سوئیوں والی مسجد گھڑیاں (ٹیپ کر کے وقت بدلیں)</h2>
+                <div id="analog-clocks-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+            </div>
+        </div>
+
+    </div><!-- /.app-layer -->
+
+    <!-- ==================== FIXED BOTTOM NAVIGATION TABS ==================== -->
+    <nav class="bottom-nav">
+        <div class="max-w-md mx-auto grid grid-cols-4 text-center">
+            <button onclick="switchTab('home')" id="nav-btn-home" class="py-2.5 flex flex-col items-center justify-center text-xs font-bold text-gray-400 nav-tab-active">
+                <span class="text-base">🕌</span>
+                <span id="nav-lbl-home">اوقاتِ نماز</span>
+            </button>
+            <button onclick="switchTab('sects')" id="nav-btn-sects" class="py-2.5 flex flex-col items-center justify-center text-xs font-bold text-gray-400">
+                <span class="text-base">⚖️</span>
+                <span id="nav-lbl-sects">مسالک</span>
+            </button>
+            <button onclick="switchTab('nawafil')" id="nav-btn-nawafil" class="py-2.5 flex flex-col items-center justify-center text-xs font-bold text-gray-400">
+                <span class="text-base">☀️</span>
+                <span id="nav-lbl-nawafil">اشراق و حاشیہ</span>
+            </button>
+            <button onclick="switchTab('analog')" id="nav-btn-analog" class="py-2.5 flex flex-col items-center justify-center text-xs font-bold text-gray-400">
+                <span class="text-base">🕰️</span>
+                <span id="nav-lbl-analog">گھڑیاں</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- 1. YEARLY MOSQUE SCHEDULE & IMD NOTICE BOARD MODAL -->
+    <div id="yearly-modal" class="modal-backdrop">
+        <div class="modal-box emboss-card">
+            <div class="flex justify-between items-center border-b pb-2.5 mb-3">
+                <h3 class="text-sm font-bold text-cyan-400">📅 مسجد کا سالانہ جماعت شیڈول اور ڈریم ایونیو بورڈ</h3>
+                <button onclick="closeModal('yearly-modal')" class="text-red-400 font-bold px-2 text-base">✕</button>
+            </div>
+
+            <div class="flex flex-col gap-3.5 text-xs leading-loose">
+                <div class="inner-box p-3.5">
+                    <label class="block font-bold text-yellow-400 mb-2">اس مسجد کے لیے جماعت کا خودکار نظام منتخب کریں:</label>
+                    <select id="select-jamaat-auto-mode" class="spacious-input font-bold mb-2" onchange="changeJamaatAutoMode()">
+                        <option value="imd_board" class="bg-gray-900">🕌 جامع مسجد ڈریم ایونیو (IMD) کا فکسڈ سالانہ بورڈ چارٹ</option>
+                        <option value="monthly_12" class="bg-gray-900">📅 آپشنل مسجد کا 12 ماہی کسٹم شیڈول</option>
+                        <option value="manual" class="bg-gray-900">✋ مینوئل موڈ (ہاتھ سے مقرر کردہ وقت)</option>
+                    </select>
+
+                    <div class="flex justify-between items-center mt-2 pt-2 border-t">
+                        <span class="text-emerald-300 font-bold">🌙 رمضان المبارک کا خصوصی اصول (فجر سحری+20m، مغرب اذان+10m)</span>
+                        <input type="checkbox" id="chk-ramadan-rule" class="w-5 h-5" onchange="toggleRamadanRule()">
+                    </div>
+                </div>
+
+                <!-- Month Editor for Optional Mosques -->
+                <div class="inner-box p-3">
+                    <label class="block text-amber-300 font-bold mb-1.5">کسی بھی مہینے کا طے شدہ وقت دیکھیں یا آپشنل مسجد کے لیے بدلیں:</label>
+                    <select id="yearly-month-select" class="spacious-input mb-3" onchange="renderYearlyMonthEditor()">
+                        <option value="0" class="bg-gray-900">جنوری (January)</option>
+                        <option value="1" class="bg-gray-900">فروری (February)</option>
+                        <option value="2" class="bg-gray-900">مارچ (March)</option>
+                        <option value="3" class="bg-gray-900">اپریل (April)</option>
+                        <option value="4" class="bg-gray-900">مئی (May)</option>
+                        <option value="5" class="bg-gray-900">جون (June)</option>
+                        <option value="6" class="bg-gray-900">جولائی (July)</option>
+                        <option value="7" class="bg-gray-900">اگست (August)</option>
+                        <option value="8" class="bg-gray-900">ستمبر (September)</option>
+                        <option value="9" class="bg-gray-900">اکتوبر (October)</option>
+                        <option value="10" class="bg-gray-900">نومبر (November)</option>
+                        <option value="11" class="bg-gray-900">دسمبر (December)</option>
+                    </select>
+
+                    <div id="yearly-month-fields" class="grid grid-cols-2 gap-2.5 text-center"></div>
+
+                    <button onclick="applySelectedMonthToCurrent()" class="mt-3 w-full spacious-btn bg-cyan-500 text-black font-bold rounded-lg text-xs">
+                        ✅ اس مہینے کا شیڈول محفوظ اور لاگو کریں
+                    </button>
+                </div>
+
+                <button onclick="closeModal('yearly-modal')" class="spacious-btn inner-box text-xs font-bold text-gray-300 w-full">بند کریں</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MOSQUE SWITCHER MODAL (1 Primary + 2 Optional Mosques) -->
+    <div id="mosque-switcher-modal" class="modal-backdrop">
+        <div class="modal-box emboss-card">
+            <div class="flex justify-between items-center border-b pb-2.5 mb-3">
+                <h3 class="text-sm font-bold text-yellow-400">🕌 بنیادی مسجد اور 2 آپشنل مساجد</h3>
+                <button onclick="closeModal('mosque-switcher-modal')" class="text-red-400 font-bold px-2 text-base">✕</button>
+            </div>
+            <p class="text-xs text-gray-300 mb-3 leading-loose">
+                مسجد نمبر 1 بنیادی طور پر جامع مسجد ڈریم ایونیو (IMD) کے فکسڈ بورڈ پر ہے، جبکہ باقی 2 آپشنل مساجد کو آپ کسی بھی مسلک یا علاقے کے مطابق استعمال کر سکتے ہیں:
+            </p>
+            <div id="mosque-switcher-list" class="flex flex-col gap-3 mb-3"></div>
+            <button onclick="closeModal('mosque-switcher-modal'); openModal('settings-modal');" class="w-full spacious-btn inner-box text-xs font-bold text-cyan-400">
+                ⚙️ منتخب مسجد کی سیٹنگز اور مسلک تبدیل کریں
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. JAMAAT & AZAN TIME EDITOR MODAL -->
+    <div id="edit-time-modal" class="modal-backdrop">
+        <div class="modal-box emboss-card text-center">
+            <div class="flex justify-between items-center border-b pb-2.5 mb-3">
+                <h3 class="text-sm font-bold text-yellow-400" id="edit-prayer-title">وقت تبدیل کریں</h3>
+                <button onclick="closeModal('edit-time-modal')" class="text-red-400 font-bold px-2 text-base">✕</button>
+            </div>
+
+            <div class="inner-box p-3.5 mb-3">
+                <label class="block text-xs font-bold text-emerald-400 mb-2">🟢 جماعت کا وقت:</label>
+                <input type="time" id="edit-time-input" class="inner-box px-4 py-2 text-2xl digital-font led-green mb-3" onchange="autoAdjustAzanFromJamaat()">
+                <div class="flex justify-center gap-2" dir="ltr">
+                    <button onclick="adjustEditMinutes(-15)" class="inner-box px-3 py-1.5 text-xs font-bold text-red-400">-15m</button>
+                    <button onclick="adjustEditMinutes(-5)" class="inner-box px-3 py-1.5 text-xs font-bold text-red-300">-5m</button>
+                    <button onclick="adjustEditMinutes(5)" class="inner-box px-3 py-1.5 text-xs font-bold text-emerald-300">+5m</button>
+                    <button onclick="adjustEditMinutes(15)" class="inner-box px-3 py-1.5 text-xs font-bold text-emerald-400">+15m</button>
+                </div>
+            </div>
+
+            <div class="inner-box p-3.5 mb-4">
+                <label class="block text-xs font-bold text-red-400 mb-2">🔴 اذان کا وقت:</label>
+                <input type="time" id="edit-azan-input" class="inner-box px-4 py-2 text-xl digital-font led-red mb-1.5">
+                <p class="text-[11px] text-gray-400 leading-relaxed">
+                    فجر اذان جماعت سے 20m قبل، ظہر و عصر 15m قبل، مغرب اول وقت پر، اور عشاء 15m قبل۔
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+                <button onclick="closeModal('edit-time-modal')" class="spacious-btn inner-box text-xs font-bold text-gray-400">منسوخ کریں</button>
+                <button onclick="saveEditedJamaatTime()" class="spacious-btn bg-emerald-500 text-black rounded-lg text-xs font-bold">✅ محفوظ کریں</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. SETTINGS & SILENT MODE PERMISSIONS MODAL -->
+    <div id="settings-modal" class="modal-backdrop">
+        <div class="modal-box emboss-card">
+            <div class="flex justify-between items-center border-b pb-2.5 mb-4">
+                <h3 class="text-base font-bold text-yellow-400">⚙️ سیٹنگز، مساجد اور آٹو سائلنٹ موڈ</h3>
+                <button onclick="closeModal('settings-modal')" class="text-red-400 font-bold text-lg px-2">✕</button>
+            </div>
+
+            <div class="flex flex-col gap-3.5 text-xs">
+                <!-- 1. Select Mosque (1 Primary + 2 Optional) -->
+                <div class="inner-box p-3.5">
+                    <label class="block text-yellow-400 font-bold mb-2">1. مسجد منتخب کریں (1 بنیادی + 2 آپشنل مساجد):</label>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="selectMosque(0)" id="mosque-tab-0" class="spacious-btn inner-box text-xs font-bold w-full"></button>
+                        <button onclick="selectMosque(1)" id="mosque-tab-1" class="spacious-btn inner-box text-xs font-bold w-full"></button>
+                        <button onclick="selectMosque(2)" id="mosque-tab-2" class="spacious-btn inner-box text-xs font-bold w-full"></button>
+                    </div>
+                </div>
+
+                <!-- 2. Silent Mode & Android Native Permissions -->
+                <div class="inner-box p-3.5">
+                    <div class="font-bold text-red-400 mb-2">2. 📵 نماز کے وقت آٹو سائلنٹ موڈ (Auto Silent & DND)</div>
+                    <div class="flex justify-between items-center mb-2.5">
+                        <span class="font-bold text-emerald-400">جماعت کے وقت سائلنٹ موڈ اور 10m قبل بیپ الرٹ</span>
+                        <input type="checkbox" id="chk-auto-silent" class="w-5 h-5" checked onchange="saveSilentPreferences()">
+                    </div>
+                    <div class="mb-2.5">
+                        <label class="block text-gray-300 mb-1">جماعت کے وقت موبائل کتنے منٹ سائلنٹ رہے؟</label>
+                        <select id="select-silent-duration" class="spacious-input font-bold" onchange="saveSilentPreferences()">
+                            <option value="15" class="bg-gray-900">15 منٹ (مختصر جماعت)</option>
+                            <option value="20" class="bg-gray-900" selected>20 منٹ (معیاری وقتِ نماز)</option>
+                            <option value="25" class="bg-gray-900">25 منٹ (سنت و نوافل سمیت)</option>
+                            <option value="30" class="bg-gray-900">30 منٹ (جمعہ و تفصیلی نماز)</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <button onclick="triggerTestSilentMode(); closeModal('settings-modal');" class="spacious-btn inner-box text-xs font-bold text-amber-300">
+                            🔊 سائلنٹ الرٹ ٹیسٹ کریں
+                        </button>
+                        <button onclick="requestAndroidNativePermissions()" class="spacious-btn inner-box text-xs font-bold text-cyan-300">
+                            🛡️ اینڈرائیڈ DND پرمیشن
+                        </button>
+                    </div>
+                    <div id="android-perm-status" class="text-[11px] text-gray-400 mt-2 leading-relaxed">
+                        حالت: پریویو آڈیو/ویژول الرٹ فعال ہے (گٹ ہب APK میں سوائپ اپ بیک گراؤنڈ سروس خودکار چلے گی)۔
+                    </div>
+                </div>
+
+                <!-- 3. Dual Perpetual Calendar Selector -->
+                <div class="inner-box p-3.5">
+                    <label class="block text-yellow-400 font-bold mb-2">3. دائمی نقشہ / کیلنڈر کا انتخاب:</label>
+                    <select id="select-calendar-engine" class="spacious-input font-bold mb-2.5" onchange="saveMosqueSettings()">
+                        <option value="lahore_chart" class="bg-gray-900">📜 نقشہ نمبر 1: دائمی نقشہ لاہور و مضافات (جامعہ اشرفیہ مستند چارٹ)</option>
+                        <option value="other_cities" class="bg-gray-900">🌍 نقشہ نمبر 2: دیگر شہروں کا آف لائن فلکیاتی کیلنڈر (کراچی، اسلام آباد وغیرہ)</option>
+                    </select>
+
+                    <div id="other-city-box" class="mt-2">
+                        <label class="block text-gray-300 font-bold mb-1">شہر منتخب کریں:</label>
+                        <select id="select-city" class="spacious-input font-bold" onchange="saveMosqueSettings()">
+                            <option value="lahore" class="bg-gray-900">لاہور (Lahore - 31.52° N, 74.35° E)</option>
+                            <option value="karachi" class="bg-gray-900">کراچی (Karachi - 24.86° N, 67.00° E)</option>
+                            <option value="islamabad" class="bg-gray-900">اسلام آباد / راولپنڈی (33.68° N, 73.04° E)</option>
+                            <option value="multan" class="bg-gray-900">ملتان (Multan - 30.15° N, 71.52° E)</option>
+                            <option value="faisalabad" class="bg-gray-900">فیصل آباد (Faisalabad - 31.45° N, 73.13° E)</option>
+                            <option value="peshawar" class="bg-gray-900">پشاور (Peshawar - 34.01° N, 71.52° E)</option>
+                            <option value="quetta" class="bg-gray-900">کوئٹہ (Quetta - 30.17° N, 66.97° E)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4. Sect Selector (Auto-sets Jumu'ah for Optional Mosques) -->
+                <div class="inner-box p-3.5">
+                    <label class="block text-yellow-400 font-bold mb-2">4. فقہ / مسلک منتخب کریں (آپشنل مساجد میں جمعہ خودکار سیٹ ہوگا):</label>
+                    <select id="select-sect" class="spacious-input font-bold" onchange="handleSectChange()">
+                        <option value="deobandi" class="bg-gray-900">🟢 مسلکِ حنفی (دیوبندی — عصر مثلِ ثانی، جمعہ 1:30)</option>
+                        <option value="barelvi" class="bg-gray-900">🔵 مسلکِ حنفی (بریلوی — عصر مثلِ ثانی، جمعہ 2:00)</option>
+                        <option value="ahlehadith" class="bg-gray-900">🟡 مسلکِ اہلِ حدیث / شافعی (عصر مثلِ اول، جمعہ 1:00)</option>
+                        <option value="jafari" class="bg-gray-900">🟣 فقہِ جعفریہ (شیعہ معیار، جمعہ 1:00)</option>
+                    </select>
+                </div>
+
+                <!-- 5. Mosque Name Inputs -->
+                <div class="inner-box p-3.5">
+                    <label class="block text-yellow-400 font-bold mb-2">5. منتخب مسجد کا نام:</label>
+                    <div class="mb-2.5">
+                        <span class="block text-[11px] text-gray-400 mb-1">اردو نام:</span>
+                        <input type="text" id="input-mosque-name-ur" class="spacious-input font-bold" oninput="handleMosqueNameInput('ur')">
+                    </div>
+                    <div>
+                        <span class="block text-[11px] text-gray-400 mb-1">انگریزی نام (English Name):</span>
+                        <input type="text" id="input-mosque-name-en" class="spacious-input text-emerald-300 font-bold" dir="ltr" oninput="handleMosqueNameInput('en')">
+                    </div>
+                </div>
+
+                <!-- 6. Keep Screen Awake & Themes -->
+                <div class="inner-box p-3.5">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b">
+                        <span class="font-bold text-cyan-300">💡 اسکرین کو مسلسل آن رکھیں (Always-On WakeLock)</span>
+                        <input type="checkbox" id="chk-wakelock" class="w-5 h-5" checked onchange="toggleWakeLockSetting()">
+                    </div>
+                    <label class="block text-gray-200 font-bold mb-2">کلر اسکیم (6 تھیمز):</label>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <button onclick="setTheme(0)" class="spacious-btn inner-box font-bold text-gray-200">⚫ رائل ڈارک</button>
+                        <button onclick="setTheme(1)" class="spacious-btn inner-box font-bold text-yellow-300">🟡 الحرمین گولڈ</button>
+                        <button onclick="setTheme(2)" class="spacious-btn inner-box font-bold text-emerald-300">🟢 مدینہ گرین</button>
+                        <button onclick="setTheme(3)" class="spacious-btn inner-box font-bold text-blue-300">🔵 مکہ نائٹ بلیو</button>
+                        <button onclick="setTheme(4)" class="spacious-btn inner-box font-bold text-amber-400">🟤 کلاسک برانز</button>
+                        <button onclick="setTheme(5)" class="spacious-btn inner-box font-bold text-black" style="background:#e2e8f0;">⚪ لائٹ موڈ</button>
+                    </div>
+                </div>
+
+                <button onclick="closeModal('settings-modal')" class="spacious-btn bg-yellow-500 text-black font-bold rounded-lg text-sm w-full">
+                    ✅ تمام سیٹنگز محفوظ کریں اور بند کریں
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. SCHEDULE ALERT MODAL -->
+    <div id="schedule-modal" class="modal-backdrop">
+        <div class="modal-box emboss-card">
+            <div class="flex justify-between items-center border-b pb-2.5 mb-3">
+                <h3 class="text-sm font-bold text-amber-400">🔔 جماعت کی تبدیلی کا پیشگی الرٹ</h3>
+                <button onclick="closeModal('schedule-modal')" class="text-red-400 font-bold text-base">✕</button>
+            </div>
+            <div class="flex flex-col gap-3.5 text-xs">
+                <div>
+                    <label class="block text-gray-300 mb-1.5">کون سی نماز کا وقت بدلنے والا ہے؟</label>
+                    <select id="sched-prayer" class="spacious-input">
+                        <option value="فجر" class="bg-gray-900">فجر</option>
+                        <option value="ظہر" class="bg-gray-900">ظہر</option>
+                        <option value="عصر" class="bg-gray-900" selected>عصر</option>
+                        <option value="مغرب" class="bg-gray-900">مغرب</option>
+                        <option value="عشاء" class="bg-gray-900">عشاء</option>
+                        <option value="جمعہ المبارک" class="bg-gray-900">جمعہ المبارک</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1.5">کب سے نافذ ہوگا؟</label>
+                    <input type="text" id="sched-day" value="9 نومبر" class="spacious-input font-bold">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1.5">نیا وقت کیا ہوگا؟</label>
+                    <input type="time" id="sched-time" value="15:45" class="spacious-input digital-font led-green text-center">
+                </div>
+                <button onclick="saveScheduleAlert()" class="spacious-btn bg-amber-500 text-black font-bold rounded-lg w-full">الرٹ محفوظ کریں</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. HELP MODAL -->
+    <div id="help-modal" class="modal-backdrop">
+        <div class="modal-box emboss-card">
+            <div class="flex justify-between items-center border-b pb-2.5 mb-3">
+                <h3 class="text-sm font-bold text-cyan-400">📘 مکمل رہنمائی اور آف لائن سسٹم کی تفصیل</h3>
+                <button onclick="closeModal('help-modal')" class="text-red-400 font-bold text-base">✕</button>
+            </div>
+            <div class="flex flex-col gap-3 text-xs">
+                <div class="inner-box p-3">
+                    <div class="font-bold text-yellow-400 mb-1">1. سو فیصد آف لائن پرپیچول کیلنڈر (بغیر انٹرنیٹ):</div>
+                    <p class="text-gray-200 leading-relaxed">
+                        یہ ایپ کسی انٹرنیٹ سرور سے منسلک نہیں ہے۔ اس میں جامعہ اشرفیہ لاہور کے 12 مہینوں کا مکمل دائمی نقشہ اور دیگر شہروں کا فلکیاتی فارمولا موبائل کے اندر ہی محفوظ ہے جو ہمیشہ آف لائن کام کرتا ہے۔
+                    </p>
+                </div>
+                <div class="inner-box p-3">
+                    <div class="font-bold text-yellow-400 mb-1">2. بنیادی مسجد (ڈریم ایونیو IMD) اور 2 آپشنل مساجد:</div>
+                    <p class="text-gray-200 leading-relaxed">
+                        پہلی مسجد جامع مسجد ڈریم ایونیو رائے ونڈ روڈ لاہور (IMD) کے سالانہ نوٹس بورڈ کے مطابق خودکار چلتی ہے، جبکہ دوسری اور تیسری آپشنل مساجد میں ہر مسلک (دیوبندی 1:30، بریلوی 2:00، اہلِ حدیث/شافعی 1:00) کے لحاظ سے الگ وقت رکھا جا سکتا ہے۔
+                    </p>
+                </div>
+                <div class="inner-box p-3">
+                    <div class="font-bold text-yellow-400 mb-1">3. نماز کے وقت آٹو سائلنٹ اور بیک گراؤنڈ سروس:</div>
+                    <p class="text-gray-200 leading-relaxed">
+                        جماعت سے 10 منٹ قبل یاددہانی بیپ بجتی ہے اور عین جماعت کے وقت سائلنٹ موڈ فعال ہو جاتا ہے۔ گٹ ہب اینڈرائیڈ بلڈ (APK) میں ڈو ناٹ ڈسٹرب (DND) اور بیک گراؤنڈ الارم پرمیشن کے ساتھ یہ ایپ سوائپ اپ کرنے کے بعد بھی فون کو خودکار سائلنٹ کرتی ہے۔
+                    </p>
+                </div>
+                <button onclick="closeModal('help-modal')" class="spacious-btn bg-cyan-500 text-black font-bold rounded-lg w-full">سمجھ آ گیا</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           1. JAMIA ASHRAFIA LAHORE 12-MONTH PERPETUAL CHART DATABASE
+              Verified from all 12 uploaded sheets (Jan - Dec)
+              Columns: [day, fajr, sunrise, zawal, zuhr, asrM1, asrM2, maghrib, isha]
+           ========================================================================== */
+        function hm(h, m) { return h * 60 + m; }
+
+        const LAHORE_CHART_ANCHORS = {
+            0: [ // JANUARY (Verified from Jan Sheet)
+                [1,  hm(5,35), hm(7,2),  hm(12,6),  hm(12,11), hm(14,52), hm(15,33), hm(17,10), hm(18,37)],
+                [5,  hm(5,36), hm(7,3),  hm(12,8),  hm(12,13), hm(14,55), hm(15,36), hm(17,13), hm(18,40)],
+                [10, hm(5,37), hm(7,3),  hm(12,10), hm(12,15), hm(14,58), hm(15,40), hm(17,18), hm(18,44)],
+                [15, hm(5,37), hm(7,3),  hm(12,12), hm(12,17), hm(15,3),  hm(15,45), hm(17,22), hm(18,48)],
+                [20, hm(5,37), hm(7,1),  hm(12,14), hm(12,19), hm(15,7),  hm(15,50), hm(17,27), hm(18,52)],
+                [25, hm(5,35), hm(7,0),  hm(12,15), hm(12,20), hm(15,11), hm(15,54), hm(17,31), hm(18,56)],
+                [31, hm(5,33), hm(6,56), hm(12,16), hm(12,21), hm(15,15), hm(15,59), hm(17,36), hm(19,0)]
+            ],
+            1: [ // FEBRUARY (Verified from Feb Sheet)
+                [1,  hm(5,32), hm(6,56), hm(12,16), hm(12,21), hm(15,16), hm(16,0),  hm(17,37), hm(19,0)],
+                [5,  hm(5,30), hm(6,53), hm(12,17), hm(12,22), hm(15,18), hm(16,3),  hm(17,41), hm(19,3)],
+                [10, hm(5,27), hm(6,49), hm(12,17), hm(12,22), hm(15,22), hm(16,7),  hm(17,45), hm(19,7)],
+                [15, hm(5,23), hm(6,45), hm(12,17), hm(12,22), hm(15,25), hm(16,11), hm(17,49), hm(19,11)],
+                [20, hm(5,19), hm(6,40), hm(12,16), hm(12,21), hm(15,28), hm(16,15), hm(17,53), hm(19,15)],
+                [25, hm(5,14), hm(6,35), hm(12,16), hm(12,21), hm(15,30), hm(16,18), hm(17,57), hm(19,18)],
+                [29, hm(5,9),  hm(6,30), hm(12,15), hm(12,20), hm(15,32), hm(16,21), hm(18,0),  hm(19,21)]
+            ],
+            2: [ // MARCH (Verified from March Sheet)
+                [1,  hm(5,9),  hm(6,30), hm(12,15), hm(12,20), hm(15,32), hm(16,21), hm(18,0),  hm(19,21)],
+                [5,  hm(5,5),  hm(6,26), hm(12,14), hm(12,19), hm(15,34), hm(16,23), hm(18,3),  hm(19,24)],
+                [10, hm(4,59), hm(6,20), hm(12,13), hm(12,18), hm(15,35), hm(16,26), hm(18,7),  hm(19,28)],
+                [15, hm(4,53), hm(6,13), hm(12,12), hm(12,17), hm(15,36), hm(16,29), hm(18,10), hm(19,31)],
+                [20, hm(4,46), hm(6,7),  hm(12,10), hm(12,15), hm(15,37), hm(16,31), hm(18,14), hm(19,35)],
+                [25, hm(4,39), hm(6,1),  hm(12,9),  hm(12,14), hm(15,38), hm(16,33), hm(18,17), hm(19,39)],
+                [31, hm(4,31), hm(5,53), hm(12,7),  hm(12,12), hm(15,39), hm(16,35), hm(18,21), hm(19,43)]
+            ],
+            3: [ // APRIL (Verified from April Sheet)
+                [1,  hm(4,30), hm(5,52), hm(12,7),  hm(12,12), hm(15,39), hm(16,36), hm(18,22), hm(19,44)],
+                [5,  hm(4,24), hm(5,47), hm(12,5),  hm(12,10), hm(15,39), hm(16,37), hm(18,25), hm(19,47)],
+                [10, hm(4,17), hm(5,41), hm(12,4),  hm(12,9),  hm(15,39), hm(16,39), hm(18,28), hm(19,52)],
+                [15, hm(4,10), hm(5,35), hm(12,3),  hm(12,8),  hm(15,39), hm(16,40), hm(18,31), hm(19,56)],
+                [20, hm(4,3),  hm(5,29), hm(12,2),  hm(12,7),  hm(15,39), hm(16,42), hm(18,35), hm(20,1)],
+                [25, hm(3,57), hm(5,24), hm(12,1),  hm(12,6),  hm(15,39), hm(16,43), hm(18,38), hm(20,5)],
+                [30, hm(3,50), hm(5,19), hm(12,0),  hm(12,5),  hm(15,39), hm(16,45), hm(18,41), hm(20,10)]
+            ],
+            4: [ // MAY (Verified from May Sheet)
+                [1,  hm(3,49), hm(5,18), hm(12,0),  hm(12,5),  hm(15,39), hm(16,45), hm(18,42), hm(20,11)],
+                [5,  hm(3,45), hm(5,14), hm(11,59), hm(12,4),  hm(15,39), hm(16,46), hm(18,45), hm(20,15)],
+                [10, hm(3,39), hm(5,10), hm(11,59), hm(12,4),  hm(15,39), hm(16,48), hm(18,48), hm(20,20)],
+                [15, hm(3,34), hm(5,7),  hm(11,59), hm(12,4),  hm(15,39), hm(16,50), hm(18,52), hm(20,25)],
+                [20, hm(3,29), hm(5,3),  hm(11,59), hm(12,4),  hm(15,39), hm(16,51), hm(18,55), hm(20,29)],
+                [25, hm(3,26), hm(5,1),  hm(11,59), hm(12,4),  hm(15,39), hm(16,53), hm(18,58), hm(20,34)],
+                [31, hm(3,22), hm(4,59), hm(12,0),  hm(12,5),  hm(15,40), hm(16,55), hm(19,2),  hm(20,39)]
+            ],
+            5: [ // JUNE (Verified from June Sheet; June 12 typo 33:18 corrected to 3:18)
+                [1,  hm(3,21), hm(4,59), hm(12,0),  hm(12,5),  hm(15,40), hm(16,55), hm(19,2),  hm(20,40)],
+                [5,  hm(3,20), hm(4,58), hm(12,1),  hm(12,6),  hm(15,41), hm(16,56), hm(19,5),  hm(20,43)],
+                [10, hm(3,18), hm(4,57), hm(12,2),  hm(12,7),  hm(15,41), hm(16,58), hm(19,7),  hm(20,46)],
+                [15, hm(3,18), hm(4,57), hm(12,3),  hm(12,8),  hm(15,42), hm(16,59), hm(19,9),  hm(20,48)],
+                [20, hm(3,18), hm(4,58), hm(12,4),  hm(12,9),  hm(15,43), hm(17,0),  hm(19,10), hm(20,50)],
+                [25, hm(3,20), hm(4,59), hm(12,5),  hm(12,10), hm(15,45), hm(17,2),  hm(19,11), hm(20,51)],
+                [30, hm(3,22), hm(5,1),  hm(12,6),  hm(12,11), hm(15,46), hm(17,2),  hm(19,12), hm(20,51)]
+            ],
+            6: [ // JULY (Verified from July Sheet)
+                [1,  hm(3,22), hm(5,1),  hm(12,6),  hm(12,11), hm(15,46), hm(17,2),  hm(19,12), hm(20,50)],
+                [5,  hm(3,24), hm(5,3),  hm(12,7),  hm(12,12), hm(15,47), hm(17,3),  hm(19,11), hm(20,49)],
+                [10, hm(3,28), hm(5,5),  hm(12,8),  hm(12,13), hm(15,48), hm(17,3),  hm(19,10), hm(20,47)],
+                [15, hm(3,31), hm(5,8),  hm(12,9),  hm(12,14), hm(15,48), hm(17,2),  hm(19,8),  hm(20,45)],
+                [20, hm(3,36), hm(5,11), hm(12,9),  hm(12,14), hm(15,49), hm(17,2),  hm(19,6),  hm(20,41)],
+                [25, hm(3,40), hm(5,14), hm(12,9),  hm(12,14), hm(15,49), hm(17,0),  hm(19,3),  hm(20,37)],
+                [31, hm(3,46), hm(5,18), hm(12,9),  hm(12,14), hm(15,49), hm(16,59), hm(19,0),  hm(20,32)]
+            ],
+            7: [ // AUGUST (Verified from Aug Sheet)
+                [1,  hm(3,46), hm(5,18), hm(12,9),  hm(12,14), hm(15,49), hm(16,58), hm(18,59), hm(20,31)],
+                [5,  hm(3,50), hm(5,21), hm(12,9),  hm(12,14), hm(15,48), hm(16,56), hm(18,55), hm(20,25)],
+                [10, hm(3,55), hm(5,24), hm(12,8),  hm(12,13), hm(15,47), hm(16,54), hm(18,50), hm(20,19)],
+                [15, hm(3,59), hm(5,27), hm(12,7),  hm(12,12), hm(15,46), hm(16,51), hm(18,45), hm(20,13)],
+                [20, hm(4,3),  hm(5,30), hm(12,6),  hm(12,11), hm(15,43), hm(16,47), hm(18,40), hm(20,6)],
+                [25, hm(4,8),  hm(5,34), hm(12,5),  hm(12,10), hm(15,41), hm(16,43), hm(18,34), hm(19,59)],
+                [31, hm(4,13), hm(5,37), hm(12,3),  hm(12,8),  hm(15,38), hm(16,39), hm(18,28), hm(19,52)]
+            ],
+            8: [ // SEPTEMBER (Verified from Sep Sheet)
+                [1,  hm(4,14), hm(5,38), hm(12,3),  hm(12,8),  hm(15,38), hm(16,38), hm(18,27), hm(19,51)],
+                [5,  hm(4,17), hm(5,40), hm(12,1),  hm(12,6),  hm(15,35), hm(16,34), hm(18,22), hm(19,45)],
+                [10, hm(4,21), hm(5,43), hm(12,0),  hm(12,5),  hm(15,32), hm(16,29), hm(18,16), hm(19,38)],
+                [15, hm(4,24), hm(5,46), hm(11,58), hm(12,3),  hm(15,28), hm(16,24), hm(18,9),  hm(19,31)],
+                [20, hm(4,28), hm(5,49), hm(11,56), hm(12,1),  hm(15,25), hm(16,19), hm(18,3),  hm(19,24)],
+                [25, hm(4,31), hm(5,52), hm(11,54), hm(11,59), hm(15,21), hm(16,13), hm(17,56), hm(19,17)],
+                [30, hm(4,35), hm(5,55), hm(11,53), hm(11,58), hm(15,16), hm(16,8),  hm(17,50), hm(19,10)]
+            ],
+            9: [ // OCTOBER (Verified from Oct Sheet)
+                [1,  hm(4,35), hm(5,56), hm(11,52), hm(11,57), hm(15,15), hm(16,7),  hm(17,48), hm(19,9)],
+                [5,  hm(4,38), hm(5,59), hm(11,51), hm(11,56), hm(15,12), hm(16,3),  hm(17,43), hm(19,4)],
+                [10, hm(4,41), hm(6,2),  hm(11,50), hm(11,55), hm(15,8),  hm(15,57), hm(17,37), hm(18,58)],
+                [15, hm(4,44), hm(6,5),  hm(11,48), hm(11,53), hm(15,4),  hm(15,52), hm(17,31), hm(18,52)],
+                [20, hm(4,48), hm(6,9),  hm(11,47), hm(11,52), hm(15,0),  hm(15,47), hm(17,25), hm(18,46)],
+                [25, hm(4,51), hm(6,13), hm(11,47), hm(11,52), hm(14,56), hm(15,42), hm(17,20), hm(18,42)],
+                [31, hm(4,55), hm(6,17), hm(11,46), hm(11,51), hm(14,51), hm(15,37), hm(17,15), hm(18,37)]
+            ],
+            10: [ // NOVEMBER (Verified from Nov Sheet)
+                [1,  hm(4,56), hm(6,18), hm(11,46), hm(11,51), hm(14,51), hm(15,36), hm(17,14), hm(18,36)],
+                [3,  hm(4,57), hm(6,20), hm(11,46), hm(11,51), hm(14,50), hm(15,35), hm(17,12), hm(18,35)],
+                [5,  hm(4,59), hm(6,22), hm(11,46), hm(11,51), hm(14,48), hm(15,33), hm(17,11), hm(18,33)],
+                [10, hm(5,2),  hm(6,26), hm(11,47), hm(11,52), hm(14,46), hm(15,30), hm(17,7),  hm(18,30)],
+                [15, hm(5,6),  hm(6,30), hm(11,47), hm(11,52), hm(14,43), hm(15,27), hm(17,3),  hm(18,28)],
+                [20, hm(5,10), hm(6,34), hm(11,48), hm(11,53), hm(14,42), hm(15,24), hm(17,1),  hm(18,26)],
+                [25, hm(5,14), hm(6,39), hm(11,50), hm(11,55), hm(14,40), hm(15,23), hm(17,0),  hm(18,25)],
+                [30, hm(5,17), hm(6,43), hm(11,51), hm(11,56), hm(14,40), hm(15,22), hm(16,59), hm(18,25)]
+            ],
+            11: [ // DECEMBER (Verified from Dec Sheet)
+                [1,  hm(5,18), hm(6,44), hm(11,52), hm(11,57), hm(14,40), hm(15,22), hm(16,59), hm(18,25)],
+                [5,  hm(5,21), hm(6,47), hm(11,53), hm(11,58), hm(14,40), hm(15,22), hm(16,59), hm(18,25)],
+                [10, hm(5,24), hm(6,51), hm(11,55), hm(12,0),  hm(14,41), hm(15,22), hm(17,0),  hm(18,26)],
+                [15, hm(5,27), hm(6,54), hm(11,58), hm(12,3),  hm(14,43), hm(15,24), hm(17,1),  hm(18,28)],
+                [20, hm(5,30), hm(6,57), hm(12,0),  hm(12,5),  hm(14,45), hm(15,26), hm(17,3),  hm(18,30)],
+                [25, hm(5,33), hm(7,0),  hm(12,3),  hm(12,8),  hm(14,47), hm(15,28), hm(17,5),  hm(18,33)],
+                [31, hm(5,35), hm(7,2),  hm(12,5),  hm(12,10), hm(14,51), hm(15,32), hm(17,9),  hm(18,36)]
+            ]
+        };
+
+        function getLahoreChartTimesForDate(dateObj, sectKey) {
+            const m = dateObj.getMonth();
+            const d = dateObj.getDate();
+            const anchors = LAHORE_CHART_ANCHORS[m] || LAHORE_CHART_ANCHORS[0];
+
+            let a1 = anchors[0], a2 = anchors[anchors.length - 1];
+            for (let i = 0; i < anchors.length - 1; i++) {
+                if (d >= anchors[i][0] && d <= anchors[i + 1][0]) {
+                    a1 = anchors[i];
+                    a2 = anchors[i + 1];
+                    break;
+                }
+            }
+
+            const ratio = (a2[0] === a1[0]) ? 0 : (d - a1[0]) / (a2[0] - a1[0]);
+            function interp(idx) {
+                return Math.round(a1[idx] + (a2[idx] - a1[idx]) * ratio);
+            }
+
+            let fajrMin    = interp(1);
+            let sunriseMin = interp(2);
+            let zawalMin   = interp(3);
+            let zuhrMin    = interp(4);
+            let asrM1Min   = interp(5);
+            let asrM2Min   = interp(6);
+            let maghribMin = interp(7);
+            let ishaMin    = interp(8);
+
+            let asrMin = (sectKey === "ahlehadith" || sectKey === "jafari") ? asrM1Min : asrM2Min;
+            if (sectKey === "barelvi") {
+                fajrMin += 2;
+                maghribMin += 2;
+            } else if (sectKey === "jafari") {
+                fajrMin -= 8;
+                maghribMin += 12;
+            }
+
+            return {
+                tahajjud:     minsToHHMM(fajrMin - 2),    // Jamia Ashrafia Margin Rule: Sehri ends 2m before Subh Sadiq
+                fajr:         minsToHHMM(fajrMin),
+                sunrise:      minsToHHMM(sunriseMin),
+                ishraq:       minsToHHMM(sunriseMin + 12), // Jamia Ashrafia Margin Rule: Ishraq 12m after Sunrise
+                zawal:        minsToHHMM(zawalMin),
+                zuhr:         minsToHHMM(zuhrMin),
+                asr:          minsToHHMM(asrMin),
+                maghrib:      minsToHHMM(maghribMin),
+                maghribLimit: minsToHHMM(ishaMin - 3),     // Jamia Ashrafia Margin Rule: Maghrib limit 3m before Isha
+                isha:         minsToHHMM(ishaMin),
+                rawMins: {
+                    fajr: fajrMin,
+                    sunrise: sunriseMin,
+                    zawalStart: zawalMin - 5,
+                    zawalEnd: zawalMin + 5,
+                    sunset: maghribMin,
+                    isha: ishaMin
+                }
+            };
+        }
+
+        /* ==========================================================================
+           2. JAMIA MASJID DREAM AVENUE (IMD) OFFICIAL BOARD SCHEDULE ENGINE
+              Exact Transitions from Uploaded Notice Board (Jan - Dec + Ramadan Rule)
+           ========================================================================== */
+        const IMD_BOARD_TRANSITIONS = [
+            { doy: 113,  monthUr: "جنوری",   day: 13, prayer: "عشاء", time: "19:15" },
+            { doy: 116,  monthUr: "جنوری",   day: 16, prayer: "عصر",  time: "16:15" },
+            { doy: 202,  monthUr: "فروری",   day: 2,  prayer: "عصر و عشاء", time: "16:30 / 19:30" },
+            { doy: 209,  monthUr: "فروری",   day: 9,  prayer: "فجر",  time: "06:00" },
+            { doy: 220,  monthUr: "فروری",   day: 20, prayer: "فجر",  time: "05:50" },
+            { doy: 221,  monthUr: "فروری",   day: 21, prayer: "عصر و عشاء", time: "16:45 / 19:45" },
+            { doy: 302,  monthUr: "مارچ",    day: 2,  prayer: "فجر",  time: "05:40" },
+            { doy: 309,  monthUr: "مارچ",    day: 9,  prayer: "فجر",  time: "05:30" },
+            { doy: 313,  monthUr: "مارچ",    day: 13, prayer: "عشاء", time: "20:00" },
+            { doy: 317,  monthUr: "مارچ",    day: 17, prayer: "فجر و عصر", time: "05:20 / 17:00" },
+            { doy: 325,  monthUr: "مارچ",    day: 25, prayer: "فجر",  time: "05:10" },
+            { doy: 402,  monthUr: "اپریل",   day: 2,  prayer: "فجر و عشاء", time: "05:00 / 20:15" },
+            { doy: 410,  monthUr: "اپریل",   day: 10, prayer: "فجر",  time: "04:50" },
+            { doy: 419,  monthUr: "اپریل",   day: 19, prayer: "فجر و عشاء", time: "04:40 / 20:30" },
+            { doy: 429,  monthUr: "اپریل",   day: 29, prayer: "فجر",  time: "04:30" },
+            { doy: 430,  monthUr: "اپریل",   day: 30, prayer: "عصر",  time: "17:15" },
+            { doy: 505,  monthUr: "مئی",     day: 5,  prayer: "عشاء", time: "20:45" },
+            { doy: 509,  monthUr: "مئی",     day: 9,  prayer: "فجر",  time: "04:20" },
+            { doy: 520,  monthUr: "مئی",     day: 20, prayer: "عشاء", time: "21:00" },
+            { doy: 525,  monthUr: "مئی",     day: 25, prayer: "فجر",  time: "04:10" },
+            { doy: 609,  monthUr: "جون",     day: 9,  prayer: "عشاء", time: "21:15" },
+            { doy: 617,  monthUr: "جون",     day: 17, prayer: "عصر",  time: "17:30" },
+            { doy: 630,  monthUr: "جون",     day: 30, prayer: "فجر",  time: "04:20" },
+            { doy: 715,  monthUr: "جولائی",  day: 15, prayer: "عشاء", time: "21:00" },
+            { doy: 720,  monthUr: "جولائی",  day: 20, prayer: "فجر",  time: "04:30" },
+            { doy: 726,  monthUr: "جولائی",  day: 26, prayer: "عصر",  time: "17:15" },
+            { doy: 802,  monthUr: "اگست",    day: 2,  prayer: "عشاء", time: "20:45" },
+            { doy: 804,  monthUr: "اگست",    day: 4,  prayer: "فجر",  time: "04:40" },
+            { doy: 814,  monthUr: "اگست",    day: 14, prayer: "عشاء", time: "20:30" },
+            { doy: 821,  monthUr: "اگست",    day: 21, prayer: "فجر",  time: "04:50" },
+            { doy: 823,  monthUr: "اگست",    day: 23, prayer: "عصر",  time: "17:00" },
+            { doy: 826,  monthUr: "اگست",    day: 26, prayer: "عشاء", time: "20:15" },
+            { doy: 906,  monthUr: "ستمبر",   day: 6,  prayer: "فجر و عشاء", time: "05:00 / 20:00" },
+            { doy: 909,  monthUr: "ستمبر",   day: 9,  prayer: "عصر",  time: "16:45" },
+            { doy: 916,  monthUr: "ستمبر",   day: 16, prayer: "عشاء", time: "19:45" },
+            { doy: 923,  monthUr: "ستمبر",   day: 23, prayer: "فجر",  time: "05:10" },
+            { doy: 924,  monthUr: "ستمبر",   day: 24, prayer: "عصر",  time: "16:30" },
+            { doy: 926,  monthUr: "ستمبر",   day: 26, prayer: "عشاء", time: "19:30" },
+            { doy: 1008, monthUr: "اکتوبر",  day: 8,  prayer: "فجر، عصر و عشاء", time: "05:20 / 16:15 / 19:15" },
+            { doy: 1022, monthUr: "اکتوبر",  day: 22, prayer: "فجر، عصر و عشاء", time: "05:30 / 16:00 / 19:00" },
+            { doy: 1104, monthUr: "نومبر",   day: 4,  prayer: "فجر",  time: "05:40" },
+            { doy: 1109, monthUr: "نومبر",   day: 9,  prayer: "عصر",  time: "15:45" },
+            { doy: 1115, monthUr: "نومبر",   day: 15, prayer: "فجر",  time: "05:50" },
+            { doy: 1127, monthUr: "نومبر",   day: 27, prayer: "فجر",  time: "06:00" },
+            { doy: 1209, monthUr: "دسمبر",   day: 9,  prayer: "فجر",  time: "06:10" },
+            { doy: 1228, monthUr: "دسمبر",   day: 28, prayer: "عصر",  time: "16:00" }
+        ];
+
+        function getDreamAvenueBoardJamaat(dateObj, startTimes, isRamadanRuleActive) {
+            const m = dateObj.getMonth() + 1;
+            const d = dateObj.getDate();
+            const doy = m * 100 + d;
+
+            // Fajr transitions (Corrected Jan 16 row per IMD Notice Board: stays 06:10 from Dec 9 until Feb 9)
+            let fajr = "06:10";
+            if      (doy >= 1209) fajr = "06:10";
+            else if (doy >= 1127) fajr = "06:00";
+            else if (doy >= 1115) fajr = "05:50";
+            else if (doy >= 1104) fajr = "05:40";
+            else if (doy >= 1022) fajr = "05:30";
+            else if (doy >= 1008) fajr = "05:20";
+            else if (doy >= 923)  fajr = "05:10";
+            else if (doy >= 906)  fajr = "05:00";
+            else if (doy >= 821)  fajr = "04:50";
+            else if (doy >= 804)  fajr = "04:40";
+            else if (doy >= 720)  fajr = "04:30";
+            else if (doy >= 630)  fajr = "04:20";
+            else if (doy >= 525)  fajr = "04:10";
+            else if (doy >= 509)  fajr = "04:20";
+            else if (doy >= 429)  fajr = "04:30";
+            else if (doy >= 419)  fajr = "04:40";
+            else if (doy >= 410)  fajr = "04:50";
+            else if (doy >= 402)  fajr = "05:00";
+            else if (doy >= 325)  fajr = "05:10";
+            else if (doy >= 317)  fajr = "05:20";
+            else if (doy >= 309)  fajr = "05:30";
+            else if (doy >= 302)  fajr = "05:40";
+            else if (doy >= 220)  fajr = "05:50";
+            else if (doy >= 209)  fajr = "06:00";
+
+            // Asr transitions from IMD Notice Board
+            let asr = "16:00";
+            if      (doy >= 1228) asr = "16:00";
+            else if (doy >= 1109) asr = "15:45";
+            else if (doy >= 1022) asr = "16:00";
+            else if (doy >= 1008) asr = "16:15";
+            else if (doy >= 924)  asr = "16:30";
+            else if (doy >= 909)  asr = "16:45";
+            else if (doy >= 823)  asr = "17:00";
+            else if (doy >= 726)  asr = "17:15";
+            else if (doy >= 617)  asr = "17:30";
+            else if (doy >= 430)  asr = "17:15";
+            else if (doy >= 317)  asr = "17:00";
+            else if (doy >= 221)  asr = "16:45";
+            else if (doy >= 202)  asr = "16:30";
+            else if (doy >= 116)  asr = "16:15";
+
+            // Isha transitions from IMD Notice Board
+            let isha = "19:00";
+            if      (doy >= 1022) isha = "19:00";
+            else if (doy >= 1008) isha = "19:15";
+            else if (doy >= 926)  isha = "19:30";
+            else if (doy >= 916)  isha = "19:45";
+            else if (doy >= 906)  isha = "20:00";
+            else if (doy >= 826)  isha = "20:15";
+            else if (doy >= 814)  isha = "20:30";
+            else if (doy >= 802)  isha = "20:45";
+            else if (doy >= 715)  isha = "21:00";
+            else if (doy >= 609)  isha = "21:15";
+            else if (doy >= 520)  isha = "21:00";
+            else if (doy >= 505)  isha = "20:45";
+            else if (doy >= 419)  isha = "20:30";
+            else if (doy >= 402)  isha = "20:15";
+            else if (doy >= 313)  isha = "20:00";
+            else if (doy >= 221)  isha = "19:45";
+            else if (doy >= 202)  isha = "19:30";
+            else if (doy >= 113)  isha = "19:15";
+
+            // Default Qari Sahib Maghrib Rule: 3m Azan + 3m Pause = +6m after Sunset
+            let maghribOffset = 6;
+
+            // IMD Notice Board Footnote for Ramadan: Fajr 20m after Sehri, Maghrib 10m after Azan
+            if (isRamadanRuleActive) {
+                fajr = minsToHHMM(hhmmToMins(startTimes.tahajjud) + 20);
+                maghribOffset = 10;
+            }
+
+            const maghribJamaat = minsToHHMM(hhmmToMins(startTimes.maghrib) + maghribOffset);
+
+            return {
+                fajr: fajr,
+                zuhr: "13:30",
+                asr: asr,
+                maghrib: maghribJamaat,
+                isha: isha,
+                jumma: "13:30"
+            };
+        }
+
+        function getNextImdBoardTransition(dateObj) {
+            const doy = (dateObj.getMonth() + 1) * 100 + dateObj.getDate();
+            for (const item of IMD_BOARD_TRANSITIONS) {
+                if (item.doy > doy) return item;
+            }
+            return IMD_BOARD_TRANSITIONS[0];
+        }
+
+        /* ==========================================================================
+           3. OTHER CITIES ASTRONOMICAL ENGINE & SECT DEFAULTS
+           ========================================================================== */
+        const CITIES = {
+            lahore:     { nameUr: "لاہور", nameEn: "Lahore", lat: 31.5204, lng: 74.3587 },
+            karachi:    { nameUr: "کراچی", nameEn: "Karachi", lat: 24.8607, lng: 67.0011 },
+            islamabad:  { nameUr: "اسلام آباد", nameEn: "Islamabad", lat: 33.6844, lng: 73.0479 },
+            multan:     { nameUr: "ملتان", nameEn: "Multan", lat: 30.1575, lng: 71.5249 },
+            faisalabad: { nameUr: "فیصل آباد", nameEn: "Faisalabad", lat: 31.4504, lng: 73.1350 },
+            peshawar:   { nameUr: "پشاور", nameEn: "Peshawar", lat: 34.0151, lng: 71.5249 },
+            quetta:     { nameUr: "کوئٹہ", nameEn: "Quetta", lat: 30.1798, lng: 66.9750 }
+        };
+
+        const SECT_INFO = {
+            deobandi:   { ur: "مسلکِ حنفی (دیوبندی)", en: "Maslak-e-Hanafi (Deobandi)", defaultZuhr: "13:30", defaultJumma: "13:30" },
+            barelvi:    { ur: "مسلکِ حنفی (بریلوی)", en: "Maslak-e-Hanafi (Barelvi)", defaultZuhr: "13:45", defaultJumma: "14:00" },
+            ahlehadith: { ur: "مسلکِ اہلِ حدیث / فقہِ شافعی", en: "Ahl-e-Hadith / Fiqh Shafi'i", defaultZuhr: "13:00", defaultJumma: "13:00" },
+            jafari:     { ur: "فقہِ جعفریہ", en: "Fiqh-e-Jafari", defaultZuhr: "12:45", defaultJumma: "13:00" }
+        };
+
+        const DEFAULT_AZAN_OFFSETS = {
+            fajr: 20, zuhr: 15, asr: 15, maghrib: 6, isha: 15, jumma: 30
+        };
+
+        const DEFAULT_YEARLY_JAMAAT = [
+            { fajr: "06:10", zuhr: "13:30", asr: "16:15", maghrib: "17:20", isha: "19:15", jumma: "13:30" },
+            { fajr: "05:50", zuhr: "13:30", asr: "16:45", maghrib: "17:50", isha: "19:45", jumma: "13:30" },
+            { fajr: "05:20", zuhr: "13:30", asr: "17:00", maghrib: "18:15", isha: "20:00", jumma: "13:30" },
+            { fajr: "04:40", zuhr: "13:30", asr: "17:15", maghrib: "18:38", isha: "20:30", jumma: "13:30" },
+            { fajr: "04:10", zuhr: "13:30", asr: "17:15", maghrib: "19:00", isha: "21:00", jumma: "13:30" },
+            { fajr: "04:20", zuhr: "13:30", asr: "17:30", maghrib: "19:15", isha: "21:15", jumma: "13:30" },
+            { fajr: "04:30", zuhr: "13:30", asr: "17:15", maghrib: "19:12", isha: "21:00", jumma: "13:30" },
+            { fajr: "04:50", zuhr: "13:30", asr: "17:00", maghrib: "18:45", isha: "20:30", jumma: "13:30" },
+            { fajr: "05:10", zuhr: "13:30", asr: "16:30", maghrib: "18:10", isha: "19:45", jumma: "13:30" },
+            { fajr: "05:30", zuhr: "13:30", asr: "16:00", maghrib: "17:35", isha: "19:00", jumma: "13:30" },
+            { fajr: "05:40", zuhr: "13:30", asr: "15:45", maghrib: "17:17", isha: "19:00", jumma: "13:30" },
+            { fajr: "06:10", zuhr: "13:30", asr: "16:00", maghrib: "17:05", isha: "19:00", jumma: "13:30" }
+        ];
+
+        const SPIRITUAL_QUOTES = [
+            {
+                ar: "إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا",
+                ur: "بے شک نماز مومنوں پر مقررہ وقت کے حساب سے فرض کی گئی ہے۔ (سورۃ النساء: 103)",
+                en: "Indeed, prayer has been decreed upon the believers a decree of specified times. (Quran 4:103)"
+            },
+            {
+                ar: "صَلَاةُ الْجَمَاعَةِ تَفْضُلُ صَلَاةَ الْفَذِّ بِسَبْعٍ وَعِشْرِينَ دَرَجَةً",
+                ur: "باجماعت نماز اکیلے پڑھنے سے ستائیس (27) درجے زیادہ فضیلت رکھتی ہے۔ (صحیح بخاری)",
+                en: "Prayer in congregation is twenty-seven times superior to prayer offered alone. (Sahih Bukhari)"
+            },
+            {
+                ar: "مَنْ صَلَّى الْبَرْدَيْنِ دَخَلَ الْجَنَّةَ",
+                ur: "جس نے دو ٹھنڈے وقتوں (فجر اور عصر) کی نماز پابندی سے پڑھی وہ جنت میں داخل ہوگا۔ (صحیح بخاری)",
+                en: "Whoever prays the two cool prayers (Fajr and Asr) will enter Paradise. (Sahih Bukhari)"
+            }
+        ];
+
+        const DEFAULT_MOSQUES = [
+            {
+                roleUr: "بنیادی مسجد (Primary)",
+                roleEn: "Primary Mosque",
+                nameUr: "جامع مسجد ڈریم ایونیو رائے ونڈ روڈ لاہور (IMD)",
+                nameEn: "Jamia Masjid Dream Avenue Lahore (IMD)",
+                sect: "deobandi",
+                city: "lahore",
+                calendarEngine: "lahore_chart",
+                jamaatAutoMode: "imd_board",
+                ramadanRule: false,
+                yearlySchedule: JSON.parse(JSON.stringify(DEFAULT_YEARLY_JAMAAT)),
+                jamaat: { fajr: "05:40", zuhr: "13:30", asr: "16:00", maghrib: "17:17", isha: "19:00", jumma: "13:30" },
+                azan:   { fajr: "05:20", zuhr: "13:15", asr: "15:45", maghrib: "17:11", isha: "18:45", jumma: "13:00" },
+                alert:  { prayer: "عصر", day: "9 نومبر", time: "15:45" }
+            },
+            {
+                roleUr: "آپشنل مسجد 1 (Optional)",
+                roleEn: "Optional Mosque 1",
+                nameUr: "جامع مسجد مدینہ (آپشنل مسجد 1)",
+                nameEn: "Jamia Masjid Madina (Optional 1)",
+                sect: "barelvi",
+                city: "lahore",
+                calendarEngine: "lahore_chart",
+                jamaatAutoMode: "manual",
+                ramadanRule: false,
+                yearlySchedule: JSON.parse(JSON.stringify(DEFAULT_YEARLY_JAMAAT)),
+                jamaat: { fajr: "05:50", zuhr: "13:45", asr: "16:00", maghrib: "17:16", isha: "19:15", jumma: "14:00" },
+                azan:   { fajr: "05:30", zuhr: "13:30", asr: "15:45", maghrib: "17:13", isha: "19:00", jumma: "13:30" },
+                alert:  { prayer: "جمعہ المبارک", day: "جمعہ", time: "14:00" }
+            },
+            {
+                roleUr: "آپشنل مسجد 2 (Optional)",
+                roleEn: "Optional Mosque 2",
+                nameUr: "مسجدِ تقویٰ (آپشنل مسجد 2)",
+                nameEn: "Masjid-e-Taqwa (Optional 2)",
+                sect: "ahlehadith",
+                city: "karachi",
+                calendarEngine: "other_cities",
+                jamaatAutoMode: "manual",
+                ramadanRule: false,
+                yearlySchedule: JSON.parse(JSON.stringify(DEFAULT_YEARLY_JAMAAT)),
+                jamaat: { fajr: "05:25", zuhr: "13:00", asr: "15:15", maghrib: "17:15", isha: "18:45", jumma: "13:00" },
+                azan:   { fajr: "05:05", zuhr: "12:45", asr: "15:00", maghrib: "17:11", isha: "18:30", jumma: "12:30" },
+                alert:  { prayer: "جمعہ المبارک", day: "جمعہ", time: "13:00" }
+            }
+        ];
+
+        let state = {
+            lang: localStorage.getItem("smc_lang") || "ur",
+            themeIndex: parseInt(localStorage.getItem("smc_theme") || "0", 10),
+            activeMosque: parseInt(localStorage.getItem("smc_active_mosque") || "0", 10),
+            azanDisplayMode: localStorage.getItem("smc_azan_mode") || "both",
+            autoSilentEnabled: localStorage.getItem("smc_auto_silent") !== "false",
+            silentDurationMins: parseInt(localStorage.getItem("smc_silent_duration") || "20", 10),
+            wakeLockEnabled: localStorage.getItem("smc_wakelock") !== "false",
+            activeTab: "home",
+            dateSlide: 0,
+            quoteIdx: 0,
+            editingPrayerKey: null,
+            lastHighlightedKey: null,
+            lastRenderedMinute: -1,
+            cachedSolar: null,
+            lastBeepMinuteKey: "",
+            silentDismissedForKey: "",
+            wakeLockObj: null,
+            mosques: JSON.parse(localStorage.getItem("smc_mosques_v8")) || DEFAULT_MOSQUES
+        };
+
+        /* ==========================================================================
+           SAFE TIME HELPERS & ASTRONOMICAL CALCULATOR
+           ========================================================================== */
+        function minsToHHMM(totalMins) {
+            if (isNaN(totalMins)) return "00:00";
+            let m = Math.round(totalMins);
+            m = ((m % 1440) + 1440) % 1440;
+            const hh = Math.floor(m / 60).toString().padStart(2, "0");
+            const mm = (m % 60).toString().padStart(2, "0");
+            return `${hh}:${mm}`;
+        }
+
+        function hhmmToMins(hhmm) {
+            if (!hhmm || typeof hhmm !== "string" || !hhmm.includes(":")) return 0;
+            const parts = hhmm.split(":").map(Number);
+            return (parts[0] || 0) * 60 + (parts[1] || 0);
+        }
+
+        function format12Hour(hhmm) {
+            if (!hhmm || typeof hhmm !== "string" || !hhmm.includes(":")) return "--:--";
+            let [h, m] = hhmm.split(":").map(Number);
+            const ampm = h >= 12 ? "PM" : "AM";
+            h = h % 12 || 12;
+            return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")} ${ampm}`;
+        }
+
+        function dtr(d) { return (d * Math.PI) / 180.0; }
+        function rtd(r) { return (r * 180.0) / Math.PI; }
+
+        function computeOtherCitiesAstronomical(dateObj, lat, lng, sectKey) {
+            const start = new Date(dateObj.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((dateObj - start) / 86400000);
+            const gamma = ((2 * Math.PI) / 365.0) * (dayOfYear - 1);
+
+            const eqTime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma)
+                         - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+
+            const decl = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma)
+                       - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma)
+                       - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+
+            const tz = 5.0;
+            const solarNoonMin = 720 - 4 * lng - eqTime + tz * 60;
+
+            function angleOffsetMin(angleDeg) {
+                const cosHA = (Math.cos(dtr(90 + angleDeg)) - Math.sin(dtr(lat)) * Math.sin(decl))
+                            / (Math.cos(dtr(lat)) * Math.cos(decl));
+                if (cosHA > 1) return 0;
+                if (cosHA < -1) return 360;
+                return rtd(Math.acos(cosHA)) * 4.0;
+            }
+
+            function asrOffsetMin(shadowFactor) {
+                const targetAngle = Math.atan(1.0 / (shadowFactor + Math.tan(Math.abs(dtr(lat) - decl))));
+                const altDeg = rtd(targetAngle);
+                return angleOffsetMin(-altDeg);
+            }
+
+            let fajrAngle = 18.0, ishaAngle = 18.0, asrFactor = 2.0;
+            let maghribExtraMin = 1, zuhrExtraMin = 5, fajrExtraMin = 0;
+
+            if (sectKey === "barelvi") {
+                maghribExtraMin = 3; fajrExtraMin = 2;
+            } else if (sectKey === "ahlehadith") {
+                asrFactor = 1.0; maghribExtraMin = 0;
+            } else if (sectKey === "jafari") {
+                fajrAngle = 16.0; ishaAngle = 14.0; asrFactor = 1.0; maghribExtraMin = 13;
+            }
+
+            const sunriseMin = Math.round(solarNoonMin - angleOffsetMin(0.833));
+            const sunsetMin  = Math.round(solarNoonMin + angleOffsetMin(0.833));
+            const fajrMin    = Math.round(solarNoonMin - angleOffsetMin(fajrAngle) + fajrExtraMin);
+            const zawalMin   = Math.round(solarNoonMin);
+            const ishaMin    = Math.round(solarNoonMin + angleOffsetMin(ishaAngle));
+
+            return {
+                tahajjud:     minsToHHMM(fajrMin - 2),
+                fajr:         minsToHHMM(fajrMin),
+                sunrise:      minsToHHMM(sunriseMin),
+                ishraq:       minsToHHMM(sunriseMin + 12),
+                zawal:        minsToHHMM(zawalMin),
+                zuhr:         minsToHHMM(zawalMin + zuhrExtraMin),
+                asr:          minsToHHMM(Math.round(solarNoonMin + asrOffsetMin(asrFactor))),
+                maghrib:      minsToHHMM(sunsetMin + maghribExtraMin),
+                maghribLimit: minsToHHMM(ishaMin - 3),
+                isha:         minsToHHMM(ishaMin),
+                rawMins: {
+                    fajr: fajrMin,
+                    sunrise: sunriseMin,
+                    zawalStart: zawalMin - 5,
+                    zawalEnd: zawalMin + 5,
+                    sunset: sunsetMin,
+                    isha: ishaMin
+                }
+            };
+        }
+
+        function computeStartTimes(dateObj, mosqueObj, sectOverride) {
+            const sectKey = sectOverride || mosqueObj.sect;
+            if (mosqueObj.calendarEngine === "lahore_chart") {
+                return getLahoreChartTimesForDate(dateObj, sectKey);
+            } else {
+                const cityObj = CITIES[mosqueObj.city] || CITIES.karachi;
+                return computeOtherCitiesAstronomical(dateObj, cityObj.lat, cityObj.lng, sectKey);
+            }
+        }
+
+        /* ==========================================================================
+           4. OFFLINE AUDIO BEEP, VIBRATION & ANDROID SILENT BRIDGE
+           ========================================================================== */
+        function playGentleReminderBeep(beepCount = 2) {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                for (let i = 0; i < beepCount; i++) {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(880, ctx.currentTime + i * 0.35);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.35);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.35 + 0.22);
+                    osc.connect(gain);
+                                        gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + i * 0.35);
+                    osc.stop(ctx.currentTime + i * 0.35 + 0.24);
+                }
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200]);
+                }
+            } catch (e) {}
+        }
+
+        function setHardwareSilentMode(enableSilent, prayerLabel) {
+            try {
+                // Native Android WebView / Capacitor Bridge Hook (for GitHub APK)
+                if (window.AndroidSilentBridge && typeof window.AndroidSilentBridge.setSilentMode === "function") {
+                    window.AndroidSilentBridge.setSilentMode(enableSilent, state.silentDurationMins, prayerLabel || "");
+                }
+            } catch (e) {}
+        }
+
+        function requestAndroidNativePermissions() {
+            const statusEl = document.getElementById("android-perm-status");
+            if (window.AndroidSilentBridge && typeof window.AndroidSilentBridge.requestPermissions === "function") {
+                window.AndroidSilentBridge.requestPermissions();
+                statusEl.innerText = "✅ اینڈرائیڈ ڈو ناٹ ڈسٹرب (DND) اور بیک گراؤنڈ الارم پرمیشن طلب کر لی گئی ہے۔";
+            } else {
+                playGentleReminderBeep(2);
+                statusEl.innerText = "ℹ️ اس وقت آپ براؤزر پریویو میں ہیں (آڈیو بیپ اور اسکرین الرٹ فعال ہے)۔ گٹ ہب APK میں یہ بٹن اینڈرائیڈ کی DND سیٹنگ کھولے گا۔";
+            }
+        }
+
+        function triggerTestSilentMode() {
+            playGentleReminderBeep(3);
+            const banner = document.getElementById("silent-active-banner");
+            const title = document.getElementById("silent-banner-title");
+            const sub = document.getElementById("silent-banner-sub");
+            banner.classList.remove("hidden");
+            document.body.classList.add("silent-mode-active");
+            title.innerText = state.lang === "ur"
+                ? `📵 ٹیسٹ سائلنٹ موڈ فعال ہے (${state.silentDurationMins} منٹ)`
+                : `📵 Test Silent Mode Active (${state.silentDurationMins} mins)`;
+            sub.innerText = state.lang === "ur"
+                ? "جماعت کے وقت اسی طرح آڈیو بیپ اور سائلنٹ موڈ خودکار طور پر آن ہوگا۔"
+                : "During Jamaat time, audio beep and silent mode will activate automatically like this.";
+            setHardwareSilentMode(true, "Test");
+        }
+
+        function dismissSilentBanner() {
+            document.getElementById("silent-active-banner").classList.add("hidden");
+            document.body.classList.remove("silent-mode-active");
+            state.silentDismissedForKey = state.lastBeepMinuteKey;
+        }
+
+        function saveSilentPreferences() {
+            const chk = document.getElementById("chk-auto-silent");
+            const dur = document.getElementById("select-silent-duration");
+            if (chk) state.autoSilentEnabled = chk.checked;
+            if (dur) state.silentDurationMins = parseInt(dur.value || "20", 10);
+            localStorage.setItem("smc_auto_silent", state.autoSilentEnabled.toString());
+            localStorage.setItem("smc_silent_duration", state.silentDurationMins.toString());
+        }
+
+        function evaluateAutoSilentState(now, activeM) {
+            const banner = document.getElementById("silent-active-banner");
+            if (!state.autoSilentEnabled) {
+                banner.classList.add("hidden");
+                document.body.classList.remove("silent-mode-active");
+                return;
+            }
+
+            const curMin = now.getHours() * 60 + now.getMinutes();
+            const isFriday = now.getDay() === 5;
+            const prayerKeys = ["fajr", isFriday ? "jumma" : "zuhr", "asr", "maghrib", "isha"];
+            const t = I18N[state.lang].prayers;
+
+            let inSilentWindow = false;
+            let activePrayerName = "";
+            let isPreReminder = false;
+
+            for (const k of prayerKeys) {
+                const jMin = hhmmToMins(activeM.jamaat[k]);
+                const diffToJamaat = jMin - curMin;
+                const elapsedSinceJamaat = curMin - jMin;
+
+                // 10 minutes before Jamaat reminder
+                if (diffToJamaat === 10) {
+                    isPreReminder = true;
+                    activePrayerName = t[k];
+                    const beepKey = `pre_${k}_${now.getDate()}_${curMin}`;
+                    if (state.lastBeepMinuteKey !== beepKey) {
+                        state.lastBeepMinuteKey = beepKey;
+                        playGentleReminderBeep(2);
+                    }
+                    break;
+                }
+
+                // Active Jamaat Silent Window (from Jamaat start up to silentDurationMins)
+                if (elapsedSinceJamaat >= 0 && elapsedSinceJamaat < state.silentDurationMins) {
+                    inSilentWindow = true;
+                    activePrayerName = t[k];
+                    const beepKey = `jamaat_${k}_${now.getDate()}`;
+                    if (state.lastBeepMinuteKey !== beepKey) {
+                        state.lastBeepMinuteKey = beepKey;
+                        playGentleReminderBeep(3);
+                        setHardwareSilentMode(true, activePrayerName);
+                    }
+                    break;
+                }
+            }
+
+            const title = document.getElementById("silent-banner-title");
+            const sub = document.getElementById("silent-banner-sub");
+
+            if (inSilentWindow) {
+                document.body.classList.add("silent-mode-active");
+                if (state.silentDismissedForKey !== state.lastBeepMinuteKey) {
+                    banner.classList.remove("hidden");
+                    title.innerText = state.lang === "ur"
+                        ? `📵 ${activePrayerName} کی جماعت کا وقت — موبائل سائلنٹ موڈ فعال ہے`
+                        : `📵 ${activePrayerName} Jamaat Time — Silent Mode Active`;
+                    sub.innerText = state.lang === "ur"
+                        ? `نماز کے احترام میں فون ${state.silentDurationMins} منٹ کے لیے خاموش ہے۔ نماز کے بعد خودکار نارمل ہو جائے گا۔`
+                        : `Phone is silenced for ${state.silentDurationMins} mins for prayer and will restore automatically.`;
+                }
+            } else if (isPreReminder) {
+                if (state.silentDismissedForKey !== state.lastBeepMinuteKey) {
+                    banner.classList.remove("hidden");
+                    title.innerText = state.lang === "ur"
+                        ? `🔔 یاددہانی: ${activePrayerName} کی جماعت میں 10 منٹ باقی ہیں`
+                        : `🔔 Reminder: 10 mins remaining until ${activePrayerName} Jamaat`;
+                    sub.innerText = state.lang === "ur"
+                        ? "جماعت شروع ہوتے ہی موبائل خودکار طور پر سائلنٹ موڈ پر چلا جائے گا۔"
+                        : "Silent mode will activate automatically when Jamaat starts.";
+                }
+            } else {
+                banner.classList.add("hidden");
+                document.body.classList.remove("silent-mode-active");
+            }
+        }
+
+        /* ==========================================================================
+           5. PERSISTENT SCREEN WAKE LOCK (PREVENTS FREEZING WHEN OPEN)
+           ========================================================================== */
+        async function requestScreenWakeLock() {
+            try {
+                if ('wakeLock' in navigator && state.wakeLockEnabled) {
+                    if (state.wakeLockObj) return;
+                    state.wakeLockObj = await navigator.wakeLock.request('screen');
+                    state.wakeLockObj.addEventListener('release', () => {
+                        state.wakeLockObj = null;
+                    });
+                }
+            } catch (err) {
+                state.wakeLockObj = null;
+            }
+        }
+
+        function toggleWakeLockSetting() {
+            const chk = document.getElementById('chk-wakelock');
+            state.wakeLockEnabled = chk ? chk.checked : true;
+            localStorage.setItem("smc_wakelock", state.wakeLockEnabled.toString());
+            if (state.wakeLockEnabled) {
+                requestScreenWakeLock();
+            } else if (state.wakeLockObj) {
+                state.wakeLockObj.release();
+                state.wakeLockObj = null;
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                requestScreenWakeLock();
+                renderAll();
+                tickClock();
+            }
+        });
+
+        // Re-verify WakeLock on any user touch/click so mobile browsers never drop it
+        document.addEventListener('click', () => {
+            if (state.wakeLockEnabled && !state.wakeLockObj) {
+                requestScreenWakeLock();
+            }
+        }, { passive: true });
+
+        /* ==========================================================================
+           6. TRANSLITERATION, HIJRI / BIKRAMI DATES & I18N
+           ========================================================================== */
+        function autoTransliterateUrToEn(urStr) {
+            const phraseMap = [
+                ["جامع مسجد", "Jamia Masjid"], ["مسجد", "Masjid"],
+                ["ڈریم ایونیو", "Dream Avenue"], ["رائے ونڈ روڈ", "Raiwind Road"],
+                ["لاہور", "Lahore"], ["مدینہ", "Madina"], ["مکی", "Makki"],
+                ["تقویٰ", "Taqwa"], ["النور", "Al-Noor"], ["رحمانیہ", "Rehmania"]
+            ];
+            let out = urStr;
+            phraseMap.forEach(([u, e]) => { out = out.split(u).join(e); });
+            return out;
+        }
+
+        function autoTransliterateEnToUr(enStr) {
+            const wordMap = [
+                [/jamia\s+masjid/gi, "جامع مسجد"], [/masjid/gi, "مسجد"],
+                [/dream\s+avenue/gi, "ڈریم ایونیو"], [/madina/gi, "مدینہ"],
+                [/makki/gi, "مکی"], [/taqwa/gi, "تقویٰ"], [/lahore/gi, "لاہور"]
+            ];
+            let out = enStr;
+            wordMap.forEach(([regex, ur]) => { out = out.replace(regex, ur); });
+            return out;
+        }
+
+        function handleMosqueNameInput(sourceLang) {
+            const m = state.mosques[state.activeMosque];
+            const urInp = document.getElementById("input-mosque-name-ur");
+            const enInp = document.getElementById("input-mosque-name-en");
+            if (sourceLang === "ur") {
+                m.nameUr = urInp.value;
+                m.nameEn = autoTransliterateUrToEn(urInp.value);
+                enInp.value = m.nameEn;
+            } else {
+                m.nameEn = enInp.value;
+                m.nameUr = autoTransliterateEnToUr(enInp.value);
+                urInp.value = m.nameUr;
+            }
+            saveState();
+            renderAll();
+        }
+
+        function computeHijriDate(dateObj) {
+            let day = dateObj.getDate(), month = dateObj.getMonth(), year = dateObj.getFullYear();
+            let m = month + 1, y = year;
+            if (m < 3) { y -= 1; m += 12; }
+            let a = Math.floor(y / 100);
+            let b = 2 - a + Math.floor(a / 4);
+            if (y < 1583) b = 0;
+            let jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524;
+            let iyear = 10631.0 / 30.0, epochastro = 1948084, shift1 = 8.01 / 60.0;
+            let z = jd - epochastro;
+            let cyc = Math.floor(z / 10631.0);
+            z = z - 10631 * cyc;
+            let j = Math.floor((z - shift1) / iyear);
+            let iy = 30 * cyc + j;
+            z = z - Math.floor(j * iyear + shift1);
+            let im = Math.floor((z + 28.5001) / 29.5);
+            if (im === 13) im = 12;
+            let id = z - Math.floor(29.5001 * im - 29);
+
+            const monthsUr = ["محرم الحرام", "صفر المظفر", "ربیع الاول", "ربیع الثانی", "جمادی الاول", "جمادی الثانی", "رجب المرجب", "شعبان المعظم", "رمضان المبارک", "شوال المکرم", "ذوالقعدہ", "ذوالحجہ"];
+            const monthsEn = ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Ula", "Jumada al-Akhirah", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"];
+            const mIndex = Math.max(0, Math.min(11, im - 1));
+            return { ur: `${id} ${monthsUr[mIndex]} ${iy} ہجری`, en: `${id} ${monthsEn[mIndex]} ${iy} AH`, monthIndex: mIndex };
+        }
+
+        function getFormattedDates() {
+            const now = new Date();
+            const daysUr = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
+            const gregMonthsUr = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
+            const gregUr = `${daysUr[now.getDay()]}، ${now.getDate()} ${gregMonthsUr[now.getMonth()]} ${now.getFullYear()}ء`;
+            const gregEn = now.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+            const hijri = computeHijriDate(now);
+            const desiMonthsUr = ["چیت", "بیساکھ", "جیٹھ", "ہاڑھ", "ساون", "بھادوں", "اسو", "کاتک", "مگھر", "پوہ", "ماگھ", "پھاگن"];
+            const desiMonthsEn = ["Chet", "Vaisakh", "Jeth", "Harh", "Sawan", "Bhadon", "Assu", "Katak", "Maghar", "Poh", "Magh", "Phagan"];
+            const doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const shifted = (doy + 292) % 365;
+            const mIdx = Math.floor(shifted / 30.4) % 12;
+            const dDay = (Math.floor(shifted % 30.4) + 1);
+            const bYear = now.getFullYear() + 57;
+
+            return [
+                { labelUr: "📅 عیسوی تاریخ", labelEn: "📅 Gregorian", valUr: gregUr, valEn: gregEn },
+                { labelUr: "🌙 اسلامی ہجری", labelEn: "🌙 Islamic Hijri", valUr: hijri.ur, valEn: hijri.en },
+                { labelUr: "🌾 دیسی تاریخ", labelEn: "🌾 Desi Bikrami", valUr: `${dDay} ${desiMonthsUr[mIdx]} ${bYear} بکرمی`, valEn: `${dDay} ${desiMonthsEn[mIdx]} ${bYear} Bikrami` }
+            ];
+        }
+
+        const I18N = {
+            ur: {
+                settings: "سیٹنگز", help: "رہنمائی", testSilent: "سائلنٹ ٹیسٹ", theme: "رنگ", switchMosque: "مسجد بدلیں (1+2)",
+                nextJamaat: "اگلی جماعت:", remaining: "بقیہ وقت:",
+                timetableHeading: "نمازوں کا نظام الاوقات",
+                colPrayer: "نماز", colJamaat: "جماعت (مسجد)",
+                awalLabel: "اول وقت:",
+                navHome: "اوقاتِ نماز", navSects: "مسالک", navNawafil: "اشراق و حاشیہ", navAnalog: "گھڑیاں",
+                prayers: { fajr: "فجر", zuhr: "ظہر", asr: "عصر", maghrib: "مغرب", isha: "عشاء", jumma: "جمعہ المبارک" }
+            },
+            en: {
+                settings: "Settings", help: "Help", testSilent: "Test Silent", theme: "Theme", switchMosque: "Switch Mosque",
+                nextJamaat: "Next Jamaat:", remaining: "Remaining:",
+                timetableHeading: "Prayer Timetable",
+                colPrayer: "Prayer", colJamaat: "Jamaat (Mosque)",
+                awalLabel: "Start:",
+                navHome: "Prayers", navSects: "Schools", navNawafil: "Ishraq & Rules", navAnalog: "Clocks",
+                prayers: { fajr: "Fajr", zuhr: "Zuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumma: "Jumu'ah" }
+            }
+        };
+
+        /* ==========================================================================
+           7. MOSQUE SCHEDULE SYNC (IMD BOARD VS OPTIONAL MOSQUES)
+           ========================================================================== */
+        function syncActiveMosqueJamaatSchedule(now, startTimes) {
+            const m = state.mosques[state.activeMosque];
+            const hijri = computeHijriDate(now);
+            const isRamadanNow = m.ramadanRule || (hijri.monthIndex === 8);
+
+            if (m.jamaatAutoMode === "imd_board") {
+                const boardTimes = getDreamAvenueBoardJamaat(now, startTimes, isRamadanNow);
+                ["fajr", "zuhr", "asr", "maghrib", "isha", "jumma"].forEach(k => {
+                    m.jamaat[k] = boardTimes[k];
+                    if (k === "maghrib") {
+                        m.azan.maghrib = startTimes.maghrib;
+                    } else {
+                        m.azan[k] = minsToHHMM(hhmmToMins(m.jamaat[k]) - DEFAULT_AZAN_OFFSETS[k]);
+                    }
+                });
+            } else if (m.jamaatAutoMode === "monthly_12") {
+                const curMonth = now.getMonth();
+                const monthSched = m.yearlySchedule[curMonth];
+                if (monthSched) {
+                    ["fajr", "zuhr", "asr", "maghrib", "isha", "jumma"].forEach(k => {
+                        m.jamaat[k] = monthSched[k];
+                        m.azan[k] = (k === "maghrib")
+                            ? startTimes.maghrib
+                            : minsToHHMM(hhmmToMins(monthSched[k]) - DEFAULT_AZAN_OFFSETS[k]);
+                    });
+                }
+            } else {
+                // In manual mode for Optional Mosques, keep Maghrib synced with daily sunset +6m unless manually edited today
+                if (!m.manualMaghribOverride) {
+                    m.azan.maghrib = startTimes.maghrib;
+                    m.jamaat.maghrib = minsToHHMM(hhmmToMins(startTimes.maghrib) + 6);
+                }
+            }
+        }
+
+        function handleSectChange() {
+            const m = state.mosques[state.activeMosque];
+            const newSect = document.getElementById("select-sect").value;
+            m.sect = newSect;
+
+            // For Optional Mosques (index 1 & 2), automatically apply sect-specific Zuhr and Jumu'ah times
+            if (state.activeMosque !== 0 && SECT_INFO[newSect]) {
+                m.jamaat.zuhr = SECT_INFO[newSect].defaultZuhr;
+                m.jamaat.jumma = SECT_INFO[newSect].defaultJumma;
+                m.azan.zuhr = minsToHHMM(hhmmToMins(m.jamaat.zuhr) - 15);
+                m.azan.jumma = minsToHHMM(hhmmToMins(m.jamaat.jumma) - 30);
+            }
+            saveMosqueSettings();
+        }
+
+        function changeJamaatAutoMode() {
+            const m = state.mosques[state.activeMosque];
+            m.jamaatAutoMode = document.getElementById("select-jamaat-auto-mode").value;
+            saveState();
+            renderAll();
+        }
+
+        function toggleRamadanRule() {
+            const m = state.mosques[state.activeMosque];
+            m.ramadanRule = document.getElementById("chk-ramadan-rule").checked;
+            saveState();
+            renderAll();
+        }
+
+        function renderYearlyMonthEditor() {
+            const m = state.mosques[state.activeMosque];
+            const mIdx = parseInt(document.getElementById("yearly-month-select").value, 10);
+            const sched = m.yearlySchedule[mIdx];
+            const t = I18N[state.lang].prayers;
+            const keys = ["fajr", "zuhr", "asr", "maghrib", "isha", "jumma"];
+            document.getElementById("yearly-month-fields").innerHTML = keys.map(k => `
+                <div class="inner-box p-2">
+                    <label class="block text-[11px] text-gray-300 font-bold mb-1">${t[k]}</label>
+                    <input type="time" id="yr-inp-${k}" value="${sched[k]}" class="inner-box px-2 py-1 text-sm digital-font led-green w-full text-center">
+                </div>
+            `).join("");
+        }
+
+        function applySelectedMonthToCurrent() {
+            const m = state.mosques[state.activeMosque];
+            const mIdx = parseInt(document.getElementById("yearly-month-select").value, 10);
+            const keys = ["fajr", "zuhr", "asr", "maghrib", "isha", "jumma"];
+            keys.forEach(k => {
+                const val = document.getElementById(`yr-inp-${k}`).value;
+                if (val) m.yearlySchedule[mIdx][k] = val;
+            });
+            if (mIdx === new Date().getMonth()) {
+                keys.forEach(k => {
+                    m.jamaat[k] = m.yearlySchedule[mIdx][k];
+                    m.azan[k] = minsToHHMM(hhmmToMins(m.jamaat[k]) - DEFAULT_AZAN_OFFSETS[k]);
+                });
+            }
+            saveState();
+            renderAll();
+            closeModal("yearly-modal");
+        }
+
+        /* ==========================================================================
+           8. MAIN UI RENDERER & LIVE CLOCK TICKER
+           ========================================================================== */
+        function getNextPrayerKeyForNow(now, activeM) {
+            const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            const isFriday = now.getDay() === 5;
+            const order = ["fajr", isFriday ? "jumma" : "zuhr", "asr", "maghrib", "isha"];
+            for (const k of order) {
+                const pSec = hhmmToMins(activeM.jamaat[k]) * 60;
+                if (pSec > nowSec) return k;
+            }
+            return "fajr";
+        }
+
+        function renderAll() {
+            const now = new Date();
+            const activeM = state.mosques[state.activeMosque];
+            const solar = computeStartTimes(now, activeM);
+            state.cachedSolar = solar;
+            syncActiveMosqueJamaatSchedule(now, solar);
+
+            const t = I18N[state.lang];
+            const root = document.getElementById("html-root");
+            root.setAttribute("dir", state.lang === "ur" ? "rtl" : "ltr");
+            root.setAttribute("lang", state.lang);
+            document.getElementById("btn-lang").innerText = state.lang === "ur" ? "EN" : "اردو";
+
+            for (let i = 0; i < 6; i++) document.body.classList.remove(`theme-${i}`);
+            document.body.classList.add(`theme-${state.themeIndex}`);
+
+            document.getElementById("lbl-settings").innerText = t.settings;
+            document.getElementById("lbl-help").innerText = t.help;
+            document.getElementById("lbl-test-silent").innerText = t.testSilent;
+            document.getElementById("lbl-theme").innerText = t.theme;
+            document.getElementById("lbl-switch-mosque").innerText = t.switchMosque;
+            document.getElementById("lbl-next-jamaat").innerText = t.nextJamaat;
+            document.getElementById("lbl-remaining").innerText = t.remaining;
+            document.getElementById("lbl-timetable-heading").innerText = t.timetableHeading;
+            document.getElementById("col-prayer").innerText = t.colPrayer;
+            document.getElementById("col-jamaat").innerText = t.colJamaat;
+            document.getElementById("nav-lbl-home").innerText = t.navHome;
+            document.getElementById("nav-lbl-sects").innerText = t.navSects;
+            document.getElementById("nav-lbl-nawafil").innerText = t.navNawafil;
+            document.getElementById("nav-lbl-analog").innerText = t.navAnalog;
+
+            // Role & Calendar Badges
+            const roleBadge = document.getElementById("mosque-role-badge");
+            roleBadge.innerText = state.activeMosque === 0
+                ? (state.lang === "ur" ? "⭐ بنیادی مسجد (IMD)" : "⭐ Primary (IMD)")
+                : (state.lang === "ur" ? `آپشنل مسجد ${state.activeMosque}` : `Optional ${state.activeMosque}`);
+
+            const calBadge = document.getElementById("calendar-source-badge");
+            const sectTag = document.getElementById("sect-engine-tag");
+            const cityObj = CITIES[activeM.city] || CITIES.lahore;
+            if (activeM.calendarEngine === "lahore_chart") {
+                calBadge.innerText = state.lang === "ur" ? "📜 نقشہ: جامعہ اشرفیہ لاہور" : "📜 Jamia Ashrafia Chart";
+                sectTag.innerText = state.lang === "ur" ? "دائمی نقشہ لاہور" : "Lahore Perpetual Chart";
+            } else {
+                calBadge.innerText = state.lang === "ur" ? `🌍 فلکیاتی: ${cityObj.nameUr}` : `🌍 Astro: ${cityObj.nameEn}`;
+                sectTag.innerText = state.lang === "ur" ? `فلکیاتی (${cityObj.nameUr})` : `Astronomical (${cityObj.nameEn})`;
+            }
+
+            // Azan Column Mode
+            const modeBtn = document.getElementById("btn-azan-mode");
+            const colAzan = document.getElementById("col-azan");
+            if (state.azanDisplayMode === "both") {
+                modeBtn.innerText = state.lang === "ur" ? "🔄 موڈ: اذانِ مسجد + اول وقت" : "🔄 Mode: Mosque Azan + Start";
+                colAzan.innerText = state.lang === "ur" ? "اذانِ مسجد (اول وقت)" : "Mosque Azan (Start)";
+            } else if (state.azanDisplayMode === "mosque_azan") {
+                modeBtn.innerText = state.lang === "ur" ? "🔄 موڈ: صرف اذانِ مسجد" : "🔄 Mode: Mosque Azan Only";
+                colAzan.innerText = state.lang === "ur" ? "اذانِ مسجد" : "Mosque Azan";
+            } else {
+                modeBtn.innerText = state.lang === "ur" ? "🔄 موڈ: صرف اول وقت" : "🔄 Mode: Start Time Only";
+                colAzan.innerText = state.lang === "ur" ? "اول وقت (آغاز)" : "Start Time";
+            }
+
+            // Mosque Switcher Buttons
+            state.mosques.forEach((m, idx) => {
+                const btn = document.getElementById(`mosque-tab-${idx}`);
+                if (btn) {
+                    const active = idx === state.activeMosque;
+                    const roleTag = idx === 0 ? "[بنیادی]" : `[آپشنل ${idx}]`;
+                    btn.innerText = `🕌 ${roleTag} ${state.lang === "ur" ? m.nameUr : m.nameEn} ${active ? ' ✓' : ''}`;
+                    btn.className = active
+                        ? "spacious-btn inner-box text-xs font-bold w-full text-yellow-400"
+                        : "spacious-btn inner-box text-xs font-bold w-full text-gray-400";
+                }
+            });
+
+            const switcherList = document.getElementById("mosque-switcher-list");
+            if (switcherList) {
+                switcherList.innerHTML = state.mosques.map((m, idx) => {
+                    const active = idx === state.activeMosque;
+                    const title = state.lang === "ur" ? m.nameUr : m.nameEn;
+                    const sectTitle = state.lang === "ur" ? SECT_INFO[m.sect].ur : SECT_INFO[m.sect].en;
+                    const roleText = idx === 0 ? "⭐ بنیادی مسجد (فکسڈ ڈریم ایونیو بورڈ)" : `🔹 آپشنل مسجد ${idx} (جمعہ: ${format12Hour(m.jamaat.jumma)})`;
+                    return `
+                        <button onclick="selectMosque(${idx}); closeModal('mosque-switcher-modal');" class="inner-box p-3.5 flex justify-between items-center text-start ${active ? 'next-prayer-highlight' : ''}">
+                            <div>
+                                <div class="text-[10px] text-cyan-300 font-bold">${roleText}</div>
+                                <div class="font-bold text-sm ${active ? 'text-yellow-400' : 'text-gray-200'} leading-loose">🕌 ${title}</div>
+                                <div class="text-[11px] text-gray-400">${sectTitle}</div>
+                            </div>
+                            <span class="text-xs font-bold ${active ? 'text-emerald-400' : 'text-gray-400'}">${active ? '✓ فعال' : 'منتخب کریں'}</span>
+                        </button>
+                    `;
+                }).join("");
+            }
+
+            const sectObj = SECT_INFO[activeM.sect] || SECT_INFO.deobandi;
+            const locText = activeM.calendarEngine === "lahore_chart"
+                ? (state.lang === "ur" ? "لاہور (دائمی نقشہ جامعہ اشرفیہ)" : "Lahore (Jamia Ashrafia Chart)")
+                : (state.lang === "ur" ? `${cityObj.nameUr} (فلکیاتی کیلنڈر)` : `${cityObj.nameEn} (Astronomical)`);
+
+            document.getElementById("active-mosque-heading").innerText = state.lang === "ur" ? activeM.nameUr : activeM.nameEn;
+            document.getElementById("active-sect-subtitle").innerText =
+                state.lang === "ur" ? `${locText} • ${sectObj.ur}` : `${locText} • ${sectObj.en}`;
+
+            // Upcoming Jamaat Change Banner
+            const upBanner = document.getElementById("home-upcoming-change-text");
+            if (activeM.jamaatAutoMode === "imd_board") {
+                const nextTr = getNextImdBoardTransition(now);
+                upBanner.innerText = `${nextTr.day} ${nextTr.monthUr} سے ${nextTr.prayer} کی جماعت کا وقت ${nextTr.time} ہوگا (ڈریم ایونیو بورڈ)۔`;
+            } else {
+                const al = activeM.alert || { prayer: "عصر", day: "جمعہ", time: "15:45" };
+                upBanner.innerText = `${al.day} سے ${al.prayer} کی جماعت کا وقت ${format12Hour(al.time)} ہوگا۔`;
+            }
+
+            // Nawafil & Margin Rules Values
+            document.getElementById("val-tahajjud").innerText     = format12Hour(solar.tahajjud);
+            document.getElementById("val-sunrise").innerText      = format12Hour(solar.sunrise);
+            document.getElementById("val-ishraq").innerText       = format12Hour(solar.ishraq);
+            document.getElementById("val-zawal").innerText        = format12Hour(solar.zawal);
+            document.getElementById("val-maghrib-limit").innerText = format12Hour(solar.maghribLimit);
+
+            // Prayer Rows
+            const nextKey = getNextPrayerKeyForNow(now, activeM);
+            state.lastHighlightedKey = nextKey;
+
+            const allKeys = ["fajr", "zuhr", "asr", "maghrib", "isha", "jumma"];
+            document.getElementById("prayer-rows-container").innerHTML = allKeys.map(k => {
+                const isNext = k === nextKey;
+                const awalStr = k === "jumma" ? format12Hour(solar.zuhr) : format12Hour(solar[k]);
+                const mosqueAzanStr = format12Hour(activeM.azan[k]);
+                const jamaatStr = format12Hour(activeM.jamaat[k]);
+
+                let middleColHtml = "";
+                if (state.azanDisplayMode === "both") {
+                    middleColHtml = `
+                        <div onclick="openEditJamaatModal('${k}')" class="cursor-pointer text-center py-0.5">
+                            <div class="digital-font led-red text-xs sm:text-sm font-bold" dir="ltr">${mosqueAzanStr}</div>
+                            <div class="text-[10px] text-gray-400 leading-relaxed mt-0.5">${t.awalLabel} <span class="digital-font text-amber-300" dir="ltr">${awalStr}</span></div>
+                        </div>
+                    `;
+                } else if (state.azanDisplayMode === "mosque_azan") {
+                    middleColHtml = `<div onclick="openEditJamaatModal('${k}')" class="digital-font led-red text-xs sm:text-sm font-bold text-center cursor-pointer" dir="ltr">${mosqueAzanStr}</div>`;
+                } else {
+                    middleColHtml = `<div class="digital-font led-red text-xs sm:text-sm font-bold text-center" dir="ltr">${awalStr}</div>`;
+                }
+
+                return `
+                    <div class="inner-box px-3 py-2.5 grid grid-cols-3 items-center ${isNext ? 'next-prayer-highlight' : ''}">
+                        <div class="font-bold text-sm flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full shrink-0 ${isNext ? 'bg-emerald-400' : 'bg-gray-600'}"></span>
+                            <span class="leading-loose emboss-3d-text">${t.prayers[k]}</span>
+                        </div>
+                        ${middleColHtml}
+                        <div class="text-end">
+                            <button onclick="openEditJamaatModal('${k}')" class="inner-box px-2.5 py-1.5 digital-font led-green text-xs sm:text-sm font-bold" dir="ltr">
+                                ${jamaatStr} ✎
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            // Sect Comparison Table (Includes Jumu'ah Comparison Row)
+            const order = ["fajr", "zuhr", "asr", "maghrib", "isha"];
+            const sDeo  = computeStartTimes(now, activeM, "deobandi");
+            const sBar  = computeStartTimes(now, activeM, "barelvi");
+            const sAhle = computeStartTimes(now, activeM, "ahlehadith");
+            const sJaf  = computeStartTimes(now, activeM, "jafari");
+
+            let sectRowsHtml = order.map(k => `
+                <div class="inner-box py-2 px-1 grid grid-cols-5 items-center text-[11px] gap-1">
+                    <div class="font-bold text-gray-200">${t.prayers[k]}</div>
+                    <div class="digital-font sect-deobandi font-bold" dir="ltr">${sDeo[k]}</div>
+                    <div class="digital-font sect-barelvi font-bold" dir="ltr">${sBar[k]}</div>
+                    <div class="digital-font sect-ahlehadith font-bold" dir="ltr">${sAhle[k]}</div>
+                    <div class="digital-font sect-jafari font-bold" dir="ltr">${sJaf[k]}</div>
+                </div>
+            `).join("");
+
+            sectRowsHtml += `
+                <div class="inner-box py-2 px-1 grid grid-cols-5 items-center text-[11px] gap-1">
+                    <div class="font-bold text-yellow-400">${t.prayers.jumma}</div>
+                    <div class="digital-font sect-deobandi font-bold" dir="ltr">01:30 PM</div>
+                    <div class="digital-font sect-barelvi font-bold" dir="ltr">02:00 PM</div>
+                    <div class="digital-font sect-ahlehadith font-bold" dir="ltr">01:00 PM</div>
+                    <div class="digital-font sect-jafari font-bold" dir="ltr">01:00 PM</div>
+                </div>
+            `;
+            document.getElementById("sect-comparison-rows").innerHTML = sectRowsHtml;
+
+            // Analog Clocks
+            document.getElementById("analog-clocks-grid").innerHTML = allKeys.map(k => {
+                const [hh, mm] = activeM.jamaat[k].split(":").map(Number);
+                const hourAngle = ((hh % 12) + mm / 60) * 30;
+                const minAngle = mm * 6;
+                return `
+                    <div onclick="openEditJamaatModal('${k}')" class="inner-box p-2.5 flex flex-col items-center cursor-pointer">
+                        <div class="text-xs font-bold text-yellow-400 mb-1">${t.prayers[k]}</div>
+                        <svg viewBox="0 0 100 100" class="w-20 h-20">
+                            <circle cx="50" cy="50" r="45" fill="#0b0f13" stroke="#eab308" stroke-width="3"/>
+                            <line x1="50" y1="8" x2="50" y2="14" stroke="#9ca3af" stroke-width="2"/>
+                            <line x1="92" y1="50" x2="86" y2="50" stroke="#9ca3af" stroke-width="2"/>
+                            <line x1="50" y1="92" x2="50" y2="86" stroke="#9ca3af" stroke-width="2"/>
+                            <line x1="8" y1="50" x2="14" y2="50" stroke="#9ca3af" stroke-width="2"/>
+                            <line x1="50" y1="50" x2="50" y2="26" stroke="#ff3b3b" stroke-width="3.5" stroke-linecap="round" transform="rotate(${hourAngle} 50 50)"/>
+                            <line x1="50" y1="50" x2="50" y2="16" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" transform="rotate(${minAngle} 50 50)"/>
+                            <circle cx="50" cy="50" r="3.5" fill="#eab308"/>
+                        </svg>
+                        <div class="digital-font led-green text-xs font-bold mt-1" dir="ltr">${format12Hour(activeM.jamaat[k])}</div>
+                    </div>
+                `;
+            }).join("");
+
+            renderQuote();
+            updateDateDisplay();
+        }
+
+        function tickClock() {
+            const now = new Date();
+            let h = now.getHours();
+            const m = now.getMinutes().toString().padStart(2, "0");
+            const s = now.getSeconds().toString().padStart(2, "0");
+            const ampm = h >= 12 ? "PM" : "AM";
+            h = h % 12 || 12;
+
+            document.getElementById("clock-hm").innerText = `${h.toString().padStart(2, "0")}:${m}`;
+            document.getElementById("clock-sec").innerText = s;
+            document.getElementById("clock-ampm").innerText = ampm;
+
+            if (now.getSeconds() % 6 === 0) {
+                state.dateSlide = (state.dateSlide + 1) % 3;
+                updateDateDisplay();
+            }
+
+            const activeM = state.mosques[state.activeMosque];
+            const curMinOfDay = now.getHours() * 60 + now.getMinutes();
+
+            // Re-evaluate solar & silent mode once per minute to keep CPU usage ultra-low
+            if (curMinOfDay !== state.lastRenderedMinute || !state.cachedSolar) {
+                state.lastRenderedMinute = curMinOfDay;
+                state.cachedSolar = computeStartTimes(now, activeM);
+                evaluateAutoSilentState(now, activeM);
+            }
+
+            const solar = state.cachedSolar;
+            const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            const isFriday = now.getDay() === 5;
+            const order = ["fajr", isFriday ? "jumma" : "zuhr", "asr", "maghrib", "isha"];
+            let targetKey = "fajr";
+            let targetSec = hhmmToMins(activeM.jamaat.fajr) * 60 + 86400;
+
+            for (const k of order) {
+                const pSec = hhmmToMins(activeM.jamaat[k]) * 60;
+                if (pSec > nowSec) {
+                    targetKey = k;
+                    targetSec = pSec;
+                    break;
+                }
+            }
+
+            if (targetKey !== state.lastHighlightedKey) {
+                renderAll();
+            }
+
+            const diff = Math.max(0, targetSec - nowSec);
+            const ch = Math.floor(diff / 3600).toString().padStart(2, "0");
+            const cm = Math.floor((diff % 3600) / 60).toString().padStart(2, "0");
+            const cs = (diff % 60).toString().padStart(2, "0");
+
+            document.getElementById("next-prayer-name").innerText = I18N[state.lang].prayers[targetKey];
+            document.getElementById("next-prayer-countdown").innerText = `${ch}:${cm}:${cs}`;
+
+            const isMakruh =
+                (curMinOfDay >= solar.rawMins.sunrise && curMinOfDay < solar.rawMins.sunrise + 12) ||
+                (curMinOfDay >= solar.rawMins.zawalStart && curMinOfDay <= solar.rawMins.zawalEnd) ||
+                (curMinOfDay >= solar.rawMins.sunset - 5 && curMinOfDay < solar.rawMins.sunset);
+
+            const badge = document.getElementById("status-badge");
+            if (isMakruh) {
+                document.body.classList.add("makruh-active");
+                badge.innerText = state.lang === "ur" ? "⚠️ مکروہ وقت" : "⚠️ Makruh Time";
+                badge.className = "inner-box px-2.5 py-1 text-red-400 font-bold animate-pulse";
+            } else {
+                document.body.classList.remove("makruh-active");
+                badge.innerText = state.lang === "ur" ? "● وقتِ نماز" : "● Prayer Time";
+                badge.className = "inner-box px-2.5 py-1 text-emerald-400 font-bold";
+            }
+        }
+
+        /* ==========================================================================
+           9. UI CONTROLS, MODALS & STATE PERSISTENCE
+           ========================================================================== */
+        function renderQuote() {
+            const q = SPIRITUAL_QUOTES[state.quoteIdx % SPIRITUAL_QUOTES.length];
+            document.getElementById("spiritual-arabic").innerText = q.ar;
+            document.getElementById("spiritual-translation").innerText = state.lang === "ur" ? q.ur : q.en;
+        }
+
+        function nextSpiritualQuote() {
+            state.quoteIdx = (state.quoteIdx + 1) % SPIRITUAL_QUOTES.length;
+            renderQuote();
+        }
+
+        function updateDateDisplay() {
+            const list = getFormattedDates();
+            const item = list[state.dateSlide % list.length];
+            document.getElementById("date-type-label").innerText = state.lang === "ur" ? item.labelUr : item.labelEn;
+            document.getElementById("date-value-text").innerText = state.lang === "ur" ? item.valUr : item.valEn;
+            document.getElementById("date-counter-badge").innerText = `${(state.dateSlide % 3) + 1}/3`;
+        }
+
+        function rotateDateManual() {
+            state.dateSlide = (state.dateSlide + 1) % 3;
+            updateDateDisplay();
+        }
+
+        function toggleAzanDisplayMode() {
+            const modes = ["both", "mosque_azan", "awal_waqt"];
+            state.azanDisplayMode = modes[(modes.indexOf(state.azanDisplayMode) + 1) % modes.length];
+            localStorage.setItem("smc_azan_mode", state.azanDisplayMode);
+            renderAll();
+        }
+
+        function switchTab(tabName) {
+            state.activeTab = tabName;
+            ["home", "sects", "nawafil", "analog"].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.toggle("hidden", t !== tabName);
+                document.getElementById(`nav-btn-${t}`).classList.toggle("nav-tab-active", t === tabName);
+            });
+        }
+
+        function setTheme(idx) {
+            state.themeIndex = idx;
+            saveState();
+            renderAll();
+        }
+
+        function cycleTheme() {
+            state.themeIndex = (state.themeIndex + 1) % 6;
+            saveState();
+            renderAll();
+        }
+
+        function toggleLanguage() {
+            state.lang = state.lang === "ur" ? "en" : "ur";
+            saveState();
+            renderAll();
+        }
+
+        function saveState() {
+            localStorage.setItem("smc_mosques_v8", JSON.stringify(state.mosques));
+            localStorage.setItem("smc_active_mosque", state.activeMosque.toString());
+            localStorage.setItem("smc_lang", state.lang);
+            localStorage.setItem("smc_theme", state.themeIndex.toString());
+        }
+
+        function selectMosque(idx) {
+            state.activeMosque = idx;
+            saveState();
+            const m = state.mosques[state.activeMosque];
+            document.getElementById("input-mosque-name-ur").value = m.nameUr;
+            document.getElementById("input-mosque-name-en").value = m.nameEn;
+            document.getElementById("select-sect").value = m.sect;
+            document.getElementById("select-calendar-engine").value = m.calendarEngine || "lahore_chart";
+            document.getElementById("select-city").value = m.city || "lahore";
+            renderAll();
+        }
+
+        function openModal(id) {
+            const m = state.mosques[state.activeMosque];
+            if (id === "settings-modal") {
+                document.getElementById("input-mosque-name-ur").value = m.nameUr;
+                document.getElementById("input-mosque-name-en").value = m.nameEn;
+                document.getElementById("select-sect").value = m.sect;
+                document.getElementById("select-calendar-engine").value = m.calendarEngine || "lahore_chart";
+                document.getElementById("select-city").value = m.city || "lahore";
+                document.getElementById("chk-auto-silent").checked = state.autoSilentEnabled;
+                document.getElementById("select-silent-duration").value = state.silentDurationMins.toString();
+                document.getElementById("chk-wakelock").checked = state.wakeLockEnabled;
+            } else if (id === "yearly-modal") {
+                document.getElementById("select-jamaat-auto-mode").value = m.jamaatAutoMode || "imd_board";
+                document.getElementById("chk-ramadan-rule").checked = !!m.ramadanRule;
+                document.getElementById("yearly-month-select").value = new Date().getMonth().toString();
+                renderYearlyMonthEditor();
+            }
+            document.getElementById(id).style.display = "block";
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+        function saveMosqueSettings() {
+            const m = state.mosques[state.activeMosque];
+            m.sect = document.getElementById("select-sect").value;
+            m.calendarEngine = document.getElementById("select-calendar-engine").value;
+            m.city = document.getElementById("select-city").value;
+            saveState();
+            renderAll();
+        }
+
+        function openEditJamaatModal(prayerKey) {
+            state.editingPrayerKey = prayerKey;
+            const m = state.mosques[state.activeMosque];
+            document.getElementById("edit-prayer-title").innerText =
+                `${I18N[state.lang].prayers[prayerKey]} — جماعت و اذان کا وقت`;
+            document.getElementById("edit-time-input").value = m.jamaat[prayerKey];
+            document.getElementById("edit-azan-input").value = m.azan[prayerKey];
+            openModal("edit-time-modal");
+        }
+
+        function autoAdjustAzanFromJamaat() {
+            if (!state.editingPrayerKey) return;
+            const jVal = document.getElementById("edit-time-input").value;
+            const offset = DEFAULT_AZAN_OFFSETS[state.editingPrayerKey] || 15;
+            document.getElementById("edit-azan-input").value = minsToHHMM(hhmmToMins(jVal) - offset);
+        }
+
+        function adjustEditMinutes(delta) {
+            const inp = document.getElementById("edit-time-input");
+            const total = hhmmToMins(inp.value || "12:00") + delta;
+            inp.value = minsToHHMM(total);
+            autoAdjustAzanFromJamaat();
+        }
+
+        function saveEditedJamaatTime() {
+            if (!state.editingPrayerKey) return;
+            const jVal = document.getElementById("edit-time-input").value;
+            const aVal = document.getElementById("edit-azan-input").value;
+            const m = state.mosques[state.activeMosque];
+            m.jamaatAutoMode = "manual";
+            if (state.editingPrayerKey === "maghrib") m.manualMaghribOverride = true;
+            if (jVal) m.jamaat[state.editingPrayerKey] = jVal;
+            if (aVal) m.azan[state.editingPrayerKey] = aVal;
+            saveState();
+            renderAll();
+            closeModal("edit-time-modal");
+        }
+
+        function saveScheduleAlert() {
+            const m = state.mosques[state.activeMosque];
+            m.alert = {
+                prayer: document.getElementById("sched-prayer").value,
+                day: document.getElementById("sched-day").value,
+                time: document.getElementById("sched-time").value
+            };
+            saveState();
+            renderAll();
+            closeModal("schedule-modal");
+        }
+
+        window.onload = () => {
+            renderAll();
+            tickClock();
+            setInterval(tickClock, 1000);
+            requestScreenWakeLock();
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+        };
+    </script>
+</body>
+</html>
+
