@@ -5,5 +5,6 @@
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "description": "Smart Mosque Digital Clock with Auto DND"
+  "description": "Smart Mosque Digital Clock with Auto DND",
+  "id": "/namaz-app/"
 }
