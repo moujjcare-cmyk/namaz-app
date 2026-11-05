@@ -5,6 +5,20 @@
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "description": "Smart Mosque Digital Clock with Auto DND",
-  "id": "/namaz-app/"
+  "description": "Smart Mosque Digital Clock with Auto DND and Silent Mode for Prayer Times",
+  "id": "/namaz-app/",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/moujjcare-cmyk/namaz-app/main/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/moujjcare-cmyk/namaz-app/main/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
