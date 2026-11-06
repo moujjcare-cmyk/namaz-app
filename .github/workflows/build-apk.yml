@@ -32,15 +32,97 @@ jobs:
       - name: Add Capacitor Android Platform
         run: npx cap add android
 
-      - name: Inject DND Permissions into AndroidManifest.xml
+      - name: Generate Mosque App Icons
+        run: |
+          sudo apt-get update && sudo apt-get install -y imagemagick
+          curl -sL "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f54c.png" -o mosque_raw.png
+          
+          # 512x512 کسٹم ایپ آئیکن کی تیاری
+          convert -size 512x512 xc:"#0b1015" \
+            \( mosque_raw.png -resize 360x360 \) -gravity center -composite \
+            icon_512.png
+          
+          RES="android/app/src/main/res"
+          # ایپ آئیکنز کو اینڈرائیڈ کے تمام سائزز میں ڈالنا
+          for dir in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
+            folder="${dir%%:*}"
+            size="${dir##*:}"
+            convert icon_512.png -resize ${size}x${size} $RES/mipmap-$folder/ic_launcher.png
+            convert icon_512.png -resize ${size}x${size} $RES/mipmap-$folder/ic_launcher_round.png
+          done
+
+      - name: Configure Background Service Permissions
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
-          sed -i 's/<application/<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>\n    <uses-permission android:name="android.permission.VIBRATE" \/>\n    <uses-permission android:name="android.permission.WAKE_LOCK" \/>\n    <application/' "$MANIFEST"
+          # فار گراؤنڈ سروس کی پرمیشنز کا اندراج
+          sed -i 's/<application/<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" \/>\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" \/>\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" \/>\n    <uses-permission android:name="android.permission.WAKE_LOCK" \/>\n    <application/' "$MANIFEST"
+          
+          # سروس کو مینی فیسٹ میں رجسٹر کرنا
+          sed -i 's/<\/application>/<service android:name=".MosqueBackgroundService" android:foregroundServiceType="specialUse" android:exported="false" \/>\n    <\/application>/' "$MANIFEST"
 
-      - name: Inject AndroidSilentBridge into MainActivity.java
+      - name: Create Background Service Java Files
         run: |
-          MAIN_ACT=$(find android/app/src/main/java -name "MainActivity.java")
-          cat << 'EOF' > "$MAIN_ACT"
+          PKG_DIR="android/app/src/main/java/com/dreamavenue/mosqueclock"
+          
+          # 1. بیک گراؤنڈ سروس جاوا فائل
+          cat << 'EOF' > "$PKG_DIR/MosqueBackgroundService.java"
+          package com.dreamavenue.mosqueclock;
+
+          import android.app.Notification;
+          import android.app.NotificationChannel;
+          import android.app.NotificationManager;
+          import android.app.Service;
+          import android.content.Context;
+          import android.content.Intent;
+          import android.os.Build;
+          import android.os.IBinder;
+          import androidx.core.app.NotificationCompat;
+
+          public class MosqueBackgroundService extends Service {
+              private static final String CHANNEL_ID = "masjid_clock_bg_channel";
+
+              @Override
+              public void onCreate() {
+                  super.onCreate();
+                  createNotificationChannel();
+                  Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                          .setContentTitle("مسجد کلاک سروس فعال ہے")
+                          .setContentText("نماز کے اوقات کی خودکار نگرانی جاری ہے")
+                          .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+                          .setPriority(NotificationCompat.PRIORITY_LOW)
+                          .setOngoing(true)
+                          .build();
+                  startForeground(101, notification);
+              }
+
+              private void createNotificationChannel() {
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      NotificationChannel channel = new NotificationChannel(
+                              CHANNEL_ID,
+                              "Masjid Clock Background Monitor",
+                              NotificationManager.IMPORTANCE_LOW
+                      );
+                      NotificationManager manager = getSystemService(NotificationManager.class);
+                      if (manager != null) {
+                          manager.createNotificationChannel(channel);
+                      }
+                  }
+              }
+
+              @Override
+              public int onStartCommand(Intent intent, int flags, int startId) {
+                  return START_STICKY;
+              }
+
+              @Override
+              public IBinder onBind(Intent intent) {
+                  return null;
+              }
+          }
+          EOF
+
+          # 2. مین ایکٹیویٹی اور سائلنٹ بریج
+          cat << 'EOF' > "$PKG_DIR/MainActivity.java"
           package com.dreamavenue.mosqueclock;
 
           import android.app.NotificationManager;
@@ -53,6 +135,7 @@ jobs:
           import android.provider.Settings;
           import android.webkit.JavascriptInterface;
           import android.widget.Toast;
+          import androidx.core.content.ContextCompat;
           import com.getcapacitor.BridgeActivity;
 
           public class MainActivity extends BridgeActivity {
@@ -62,6 +145,11 @@ jobs:
               @Override
               public void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
+                  
+                  // ایپ سوائپ کرنے کے بعد بھی چلتی رہے گی
+                  Intent serviceIntent = new Intent(this, MosqueBackgroundService.class);
+                  ContextCompat.startForegroundService(this, serviceIntent);
+
                   this.bridge.getWebView().addJavascriptInterface(new SilentBridge(this), "AndroidSilentBridge");
               }
 
