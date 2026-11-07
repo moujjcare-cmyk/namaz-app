@@ -24,40 +24,120 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Auto-Inject Smart Filter Script into index.html
+      - name: Auto-Inject UI Enhancements & Smart Filter into index.html
         run: |
           cat << 'EOF' >> index.html
           <script>
           (function() {
+            function injectCustomUI() {
+              // 1. سیٹنگز میں نئے آپشنز اور اسٹیٹس آئیکن کا بٹن شامل کرنا
+              const allSelects = document.querySelectorAll('select');
+              allSelects.forEach(sel => {
+                if (sel.innerText.includes('20 منٹ') && !document.getElementById('mouj-pre-select')) {
+                  // نئے دورانیے شامل کرنا
+                  if (!sel.innerHTML.includes('45')) {
+                    sel.insertAdjacentHTML('beforeend', '<option value="25">25 منٹ (نماز + سنتیں)</option><option value="30">30 منٹ (مکمل اطمینان)</option><option value="45">45 منٹ (جمعہ / طویل دورانیہ)</option>');
+                  }
+
+                  const wrapper = document.createElement('div');
+                  wrapper.style.marginTop = '12px';
+                  wrapper.style.marginBottom = '12px';
+                  wrapper.style.textAlign = 'right';
+                  wrapper.dir = 'rtl';
+                  wrapper.innerHTML = `
+                    <label style="display:block; color:#cbd5e1; font-size:13px; margin-bottom:6px;">جماعت سے کتنے منٹ پہلے موبائل سائلنٹ ہو؟</label>
+                    <select id="mouj-pre-select" style="width:100%; padding:10px; background:#0f172a; color:#f8fafc; border:1px solid #334155; border-radius:8px; font-family:inherit; font-size:14px; margin-bottom:10px;">
+                      <option value="smart">سمارٹ آٹو موڈ (فجر 15m، مغرب 4m، جمعہ 20m، باقی 10m)</option>
+                      <option value="10">ہر نماز میں جماعت سے 10 منٹ پہلے</option>
+                      <option value="15">ہر نماز میں جماعت سے 15 منٹ پہلے</option>
+                      <option value="5">ہر نماز میں جماعت سے 5 منٹ پہلے</option>
+                      <option value="20">ہر نماز میں جماعت سے 20 منٹ پہلے</option>
+                      <option value="30">اذان کے ساتھ (جماعت سے 30 منٹ قبل)</option>
+                    </select>
+                    <label style="display:flex; align-items:center; gap:8px; color:#38bdf8; font-size:13px; cursor:pointer; margin-top:6px;">
+                      <input type="checkbox" id="mouj-status-icon" style="width:18px; height:18px; accent-color:#0284c7;">
+                      <span>اسکرین کے اوپر (Status Bar) میں ایپ چلنے کا آئیکن دکھائیں</span>
+                    </label>
+                  `;
+                  sel.parentNode.insertBefore(wrapper, sel);
+
+                  const preSelect = document.getElementById('mouj-pre-select');
+                  const statusToggle = document.getElementById('mouj-status-icon');
+
+                  preSelect.value = localStorage.getItem('mouj_pre_mode') || 'smart';
+                  statusToggle.checked = localStorage.getItem('mouj_status_icon') === 'true';
+
+                  preSelect.addEventListener('change', () => {
+                    localStorage.setItem('mouj_pre_mode', preSelect.value);
+                    window._lastSmartPayload = "";
+                    syncSmartAlarms();
+                  });
+
+                  statusToggle.addEventListener('change', () => {
+                    localStorage.setItem('mouj_status_icon', statusToggle.checked);
+                    if (window.AndroidSilentBridge && window.AndroidSilentBridge.toggleStatusIcon) {
+                      window.AndroidSilentBridge.toggleStatusIcon(statusToggle.checked);
+                    }
+                  });
+
+                  // پہلی بار لوڈ ہونے پر آئیکن کی حالت سنک کرنا
+                  setTimeout(() => {
+                    if (window.AndroidSilentBridge && window.AndroidSilentBridge.toggleStatusIcon) {
+                      window.AndroidSilentBridge.toggleStatusIcon(statusToggle.checked);
+                    }
+                  }, 1500);
+                }
+              });
+
+              // 2. موج ڈیجیٹل (MOUJ Digital) اور دعاؤں کا فوٹر شامل کرنا
+              if (!document.getElementById('mouj-branding-footer')) {
+                const footer = document.createElement('div');
+                footer.id = 'mouj-branding-footer';
+                footer.dir = 'rtl';
+                footer.style.cssText = 'text-align:center; padding:16px 12px; margin:20px 12px 85px 12px; border-top:1px solid rgba(255,215,0,0.25); background:linear-gradient(180deg, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0.95) 100%); border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+                footer.innerHTML = `
+                  <div style="color:#fbbf24; font-weight:bold; font-size:15px; letter-spacing:0.5px;">✨ پیشکش: موج ڈیجیٹل (MOUJ Digital) ✨</div>
+                  <div style="color:#e2e8f0; font-size:13px; margin-top:6px; line-height:1.6;">یہ ایپ رضائے الٰہی اور نمازیوں کی سہولت کے لیے بنائی گئی ہے۔<br><span style="color:#38bdf8;">گزارش:</span> اپنی خصوصی دعاؤں میں ضرور یاد رکھیں۔ 🤲</div>
+                `;
+                document.body.appendChild(footer);
+              }
+            }
+
             function syncSmartAlarms() {
               if (!window.AndroidSilentBridge || !window.AndroidSilentBridge.scheduleSmartAlarms) return;
               try {
                 const isFriday = (new Date().getDay() === 5);
-                
-                // ہر نماز کی مخصوص لاجک (pre: جماعت سے کتنے منٹ پہلے، dur: کل کتنے منٹ سائلنٹ رہے)
-                const rules = {
-                  'فجر': { pre: 15, dur: 40 },  // 15 منٹ پہلے + 25 منٹ بعد = 40 منٹ
-                  'ظہر': isFriday ? { pre: 20, dur: 45 } : { pre: 10, dur: 30 }, // جمعہ کو خاص ٹائمنگ
-                  'جمعہ': { pre: 20, dur: 45 }, // 20 منٹ پہلے + 25 منٹ بعد = 45 منٹ
-                  'عصر': { pre: 10, dur: 25 },  // 10 منٹ پہلے + 15 منٹ بعد = 25 منٹ
-                  'مغرب': { pre: 4, dur: 19 },  // 4 منٹ پہلے + 15 منٹ بعد = 19 منٹ
-                  'عشاء': { pre: 10, dur: 35 }  // 10 منٹ پہلے + 25 منٹ بعد = 35 منٹ
+                const preMode = localStorage.getItem('mouj_pre_mode') || 'smart';
+
+                // صارف کی منتخب کردہ بعد والی ٹائمنگ نکالنا
+                let postMins = 20;
+                document.querySelectorAll('select').forEach(sel => {
+                  if (sel.id !== 'mouj-pre-select' && sel.innerText.includes('منٹ')) {
+                    const val = parseInt(sel.value, 10);
+                    if (!isNaN(val) && val > 0) postMins = val;
+                  }
+                });
+
+                const defaultRules = {
+                  'فجر': { pre: 15, post: Math.max(postMins, 25) },
+                  'ظہر': isFriday ? { pre: 20, post: Math.max(postMins, 25) } : { pre: 10, post: postMins },
+                  'جمعہ': { pre: 20, post: Math.max(postMins, 25) },
+                  'عصر': { pre: 10, post: 15 },
+                  'مغرب': { pre: 4, post: 15 },
+                  'عشاء': { pre: 10, post: Math.max(postMins, 25) }
                 };
-                
+
                 let foundAlarms = {};
                 const singleTimeRegex = /\b(0?[1-9]|1[0-2]):([0-5][0-9])\s*(AM|PM)\b/i;
                 const allTimeRegex = /\b(0?[1-9]|1[0-2]):([0-5][0-9])\s*(AM|PM)\b/gi;
-                
+
                 const containers = document.querySelectorAll('div, tr, li');
                 containers.forEach(el => {
                   const text = (el.innerText || "").trim();
-                  // صرف نماز والے کارڈز کو چیک کرنا جہاں اول وقت بھی لکھا ہو تاکہ فالتو ڈبے فلٹر ہو جائیں
                   if (text.length > 15 && text.length < 250 && text.includes('اول وقت')) {
-                    Object.keys(rules).forEach(prayer => {
+                    Object.keys(defaultRules).forEach(prayer => {
                       if (text.includes(prayer) && !foundAlarms[prayer]) {
                         let jamaatMatch = null;
-                        
-                        // 1. سب سے پہلے جماعت والے بٹن کو تلاش کرنا (جس میں اول وقت یا اذان نہیں لکھا ہوتا)
                         const subEls = el.querySelectorAll('button, span, div');
                         subEls.forEach(sub => {
                           const sTxt = (sub.innerText || "").trim();
@@ -66,13 +146,10 @@ jobs:
                             if (m) jamaatMatch = m;
                           }
                         });
-                        
-                        // 2. بیک اپ طریقہ: اگر بٹن الگ نہ ملے تو کارڈ کا سب سے پہلا وقت اٹھانا (جو جماعت کا ہوتا ہے)
+
                         if (!jamaatMatch) {
                           const allMatches = [...text.matchAll(allTimeRegex)];
-                          if (allMatches.length > 0) {
-                            jamaatMatch = allMatches[0];
-                          }
+                          if (allMatches.length > 0) jamaatMatch = allMatches[0];
                         }
 
                         if (jamaatMatch) {
@@ -81,12 +158,15 @@ jobs:
                           const ampm = jamaatMatch[3].toUpperCase();
                           if (ampm === 'PM' && hr < 12) hr += 12;
                           if (ampm === 'AM' && hr === 12) hr = 0;
-                          
+
+                          const preVal = (preMode === 'smart') ? defaultRules[prayer].pre : parseInt(preMode, 10);
+                          const postVal = (preMode === 'smart') ? defaultRules[prayer].post : postMins;
+
                           foundAlarms[prayer] = {
                             h: hr,
                             m: min,
-                            pre: rules[prayer].pre,
-                            dur: rules[prayer].dur
+                            pre: preVal,
+                            dur: preVal + postVal
                           };
                         }
                       }
@@ -102,14 +182,20 @@ jobs:
                     window.AndroidSilentBridge.scheduleSmartAlarms(payload);
                   }
                 }
-              } catch (e) {
-                console.error("Smart Alarm Sync Error:", e);
-              }
+              } catch (e) { console.error("Sync Error:", e); }
             }
-            
-            setInterval(syncSmartAlarms, 4000);
-            window.addEventListener('load', () => setTimeout(syncSmartAlarms, 2000));
-            document.addEventListener('click', () => setTimeout(syncSmartAlarms, 1000));
+
+            setInterval(() => {
+              injectCustomUI();
+              syncSmartAlarms();
+            }, 3000);
+
+            window.addEventListener('load', () => {
+              setTimeout(() => { injectCustomUI(); syncSmartAlarms(); }, 1200);
+            });
+            document.addEventListener('click', () => {
+              setTimeout(() => { injectCustomUI(); syncSmartAlarms(); }, 500);
+            });
           })();
           </script>
           EOF
@@ -140,7 +226,7 @@ jobs:
       - name: Configure Native Permissions in Manifest
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
-          sed -i 's/<application/<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.WAKE_LOCK" \/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" \/>\n    <application/' "$MANIFEST"
+          sed -i 's/<application/<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" \/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.WAKE_LOCK" \/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" \/>\n    <application/' "$MANIFEST"
           sed -i 's/<\/application>/<receiver android:name=".PrayerAlarmReceiver" android:enabled="true" android:exported="false" \/>\n    <\/application>/' "$MANIFEST"
 
       - name: Create Smart Alarm Receiver & Bridge
@@ -171,7 +257,7 @@ jobs:
                   String action = intent.getStringExtra("ACTION_TYPE");
                   if ("START_SILENT".equals(action)) {
                       nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
-                      int durationMins = intent.getIntExtra("DURATION_MINS", 20);
+                      int durationMins = intent.getIntExtra("DURATION_MINS", 25);
                       
                       AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                       Intent restoreIntent = new Intent(context, PrayerAlarmReceiver.class);
@@ -222,11 +308,13 @@ jobs:
           }
           EOF
 
-          # 2. MainActivity.java (تمام بٹنز اور نئے سمارٹ فلٹر کے ساتھ مکمل)
+          # 2. MainActivity.java
           cat << 'EOF' > "$PKG_DIR/MainActivity.java"
           package com.dreamavenue.mosqueclock;
 
           import android.app.AlarmManager;
+          import android.app.Notification;
+          import android.app.NotificationChannel;
           import android.app.NotificationManager;
           import android.app.PendingIntent;
           import android.content.Context;
@@ -254,7 +342,6 @@ jobs:
                   Context mContext;
                   SilentBridge(Context c) { mContext = c; }
 
-                  // پرمیشن بٹن کے لیے
                   @JavascriptInterface
                   public void requestPermissions() {
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -271,7 +358,32 @@ jobs:
                       }
                   }
 
-                  // سائلنٹ الرٹ ٹیسٹ بٹن کے لیے
+                  @JavascriptInterface
+                  public void toggleStatusIcon(boolean show) {
+                      NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                      if (nm == null) return;
+                      String chanId = "masjid_active_indicator";
+                      if (show) {
+                          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                              NotificationChannel ch = new NotificationChannel(chanId, "Masjid Clock Active", NotificationManager.IMPORTANCE_LOW);
+                              ch.setShowBadge(false);
+                              nm.createNotificationChannel(ch);
+                          }
+                          Intent openIntent = new Intent(mContext, MainActivity.class);
+                          PendingIntent pi = PendingIntent.getActivity(mContext, 0, openIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                          Notification.Builder b = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ?
+                              new Notification.Builder(mContext, chanId) : new Notification.Builder(mContext);
+                          b.setContentTitle("مسجد کلاک آٹو سائلنٹ فعال ہے")
+                           .setContentText("نماز کے اوقات میں فون خودکار سائلنٹ ہو جائے گا • MOUJ Digital")
+                           .setSmallIcon(mContext.getApplicationInfo().icon)
+                           .setContentIntent(pi)
+                           .setOngoing(true);
+                          nm.notify(7788, b.build());
+                      } else {
+                          nm.cancel(7788);
+                      }
+                  }
+
                   @JavascriptInterface
                   public void setSilentMode(boolean enable, int durationMins, String prayerLabel) {
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -298,13 +410,11 @@ jobs:
                       }
                   }
 
-                  // پرانے فنکشن کو خالی رکھا گیا ہے تاکہ ایپ کا پرانا کوڈ کریش نہ ہو
                   @JavascriptInterface
                   public void scheduleDailyAlarms(String csvTimes, int durationMins) {
                       // Handled by scheduleSmartAlarms
                   }
 
-                  // نیا سمارٹ فلٹر شیڈولر
                   @JavascriptInterface
                   public void scheduleSmartAlarms(String jsonString) {
                       try {
@@ -335,7 +445,6 @@ jobs:
                               cal.set(Calendar.SECOND, 0);
                               cal.set(Calendar.MILLISECOND, 0);
 
-                              // جماعت کے وقت سے مقررہ منٹ (مثلاً 10، 15 یا 4 منٹ) پیچھے لانا
                               cal.add(Calendar.MINUTE, -pre);
 
                               if (cal.getTimeInMillis() <= System.currentTimeMillis()) {
