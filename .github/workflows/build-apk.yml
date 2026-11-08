@@ -259,7 +259,6 @@ jobs:
               } catch (e) { console.error("Sync Error:", e); }
             }
 
-            // بیٹری بچانے کے لیے وقفہ 10 سیکنڈ کر دیا گیا ہے کیونکہ کلک پر یہ ویسے ہی فوراً چلتا ہے
             setInterval(() => {
               if (!document.hidden) {
                 injectCustomUI();
@@ -280,12 +279,6 @@ jobs:
 
       - name: Add Capacitor Android Platform
         run: npx cap add android
-
-      - name: Ensure Backward Compatibility (Android 7.0+ Support)
-        run: |
-          if [ -f "android/variables.gradle" ]; then
-            sed -i 's/minSdkVersion = [0-9]*/minSdkVersion = 24/g' android/variables.gradle
-          fi
 
       - name: Generate Mosque App Icons
         run: |
@@ -308,12 +301,12 @@ jobs:
           sed -i 's/<application/<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" \/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.WAKE_LOCK" \/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" \/>\n    <application/' "$MANIFEST"
           sed -i 's/<\/application>/<receiver android:name=".PrayerAlarmReceiver" android:enabled="true" android:exported="false" \/>\n    <\/application>/' "$MANIFEST"
 
-      - name: Create Universal Alarm Receiver & Bridge (Android 7 to 16+)
+      - name: Create Universal Alarm Receiver & Bridge
         run: |
           PKG_DIR="android/app/src/main/java/com/dreamavenue/mosqueclock"
           mkdir -p "$PKG_DIR"
           
-          # 1. PrayerAlarmReceiver.java (Safe for all OEMs & Android versions)
+          # 1. PrayerAlarmReceiver.java
           cat << 'EOF' > "$PKG_DIR/PrayerAlarmReceiver.java"
           package com.dreamavenue.mosqueclock;
 
@@ -330,15 +323,13 @@ jobs:
               private void setUniversalAlarm(AlarmManager am, long triggerAtMillis, PendingIntent pi) {
                   if (am == null) return;
                   try {
-                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
-                          am.setWindow(AlarmManager.RTC_WAKEUP, triggerAtMillis, 60000L, pi);
-                      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                           am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
                       } else {
                           am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
                       }
                   } catch (SecurityException se) {
-                      am.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
+                      try { am.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi); } catch (Exception ignored) {}
                   } catch (Exception ignored) {}
               }
 
@@ -349,8 +340,7 @@ jobs:
                   if (nm == null || !nm.isNotificationPolicyAccessGranted()) return;
 
                   String action = intent.getStringExtra("ACTION_TYPE");
-                  int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
+                  int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
 
                   if ("START_SILENT".equals(action)) {
                       try { nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE); } catch (Exception ignored) {}
@@ -434,23 +424,19 @@ jobs:
                   SilentBridge(Context c) { mContext = c; }
 
                   private int getPendingFlags() {
-                      int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
-                      return flags;
+                      return PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
                   }
 
                   private void scheduleSafe(AlarmManager am, long timeMillis, PendingIntent pi) {
                       if (am == null) return;
                       try {
-                          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
-                              am.setWindow(AlarmManager.RTC_WAKEUP, timeMillis, 60000L, pi);
-                          } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                               am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeMillis, pi);
                           } else {
                               am.setExact(AlarmManager.RTC_WAKEUP, timeMillis, pi);
                           }
                       } catch (SecurityException se) {
-                          am.set(AlarmManager.RTC_WAKEUP, timeMillis, pi);
+                          try { am.set(AlarmManager.RTC_WAKEUP, timeMillis, pi); } catch (Exception ignored) {}
                       } catch (Exception ignored) {}
                   }
 
