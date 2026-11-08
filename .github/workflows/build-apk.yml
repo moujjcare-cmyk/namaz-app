@@ -31,27 +31,33 @@ jobs:
           <script>
           (function() {
             function injectCustomUI() {
-              // 1. کلمہ مبارک والے باکس کو اوپر فکس (Sticky) کرنا
+              // 1. کلمہ مبارک کو سکرین کے اوپر پکا فکس (Fixed) کرنا
               const allDivs = document.querySelectorAll('div');
               for (let i = 0; i < allDivs.length; i++) {
                 const d = allDivs[i];
-                if (d.dataset.stickySet) continue;
-                const txt = d.innerText || "";
-                if (txt.includes('بسم') && txt.includes('رسول') && txt.length < 150 && d.children.length <= 4) {
-                  d.dataset.stickySet = "true";
-                  d.style.position = 'sticky';
-                  d.style.top = '0';
-                  d.style.zIndex = '9999';
+                if (d.dataset.fixedSet) break;
+                const txt = (d.innerText || "").trim();
+                if (txt.includes('بسم') && txt.includes('رسول') && txt.length < 120 && d.children.length <= 3) {
+                  d.dataset.fixedSet = "true";
+                  const rect = d.getBoundingClientRect();
+                  const placeholder = document.createElement('div');
+                  placeholder.style.height = (rect.height + 12) + 'px';
+                  d.parentNode.insertBefore(placeholder, d);
+
+                  d.style.position = 'fixed';
+                  d.style.top = '6px';
+                  d.style.left = '12px';
+                  d.style.right = '12px';
+                  d.style.zIndex = '99999';
                   d.style.backgroundColor = '#0b1015';
-                  d.style.paddingTop = '8px';
-                  d.style.paddingBottom = '8px';
-                  d.style.borderBottom = '1px solid #fbbf24';
-                  d.style.boxShadow = '0 6px 15px rgba(0, 0, 0, 0.8)';
+                  d.style.border = '1px solid #fbbf24';
+                  d.style.borderRadius = '12px';
+                  d.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.9)';
                   break;
                 }
               }
 
-              // 2. سیٹنگز میں جماعت سے پہلے اور بعد کے آپشنز اور آئیکن ٹوگل شامل کرنا
+              // 2. سیٹنگز میں جماعت سے پہلے اور بعد کے آپشنز شامل کرنا
               if (!document.getElementById('mouj-pre-select')) {
                 const allSelects = document.querySelectorAll('select');
                 allSelects.forEach(sel => {
@@ -67,7 +73,7 @@ jobs:
                     wrapper.dir = 'rtl';
                     wrapper.innerHTML = `
                       <label style="display:block; color:#cbd5e1; font-size:13px; margin-bottom:6px;">جماعت سے کتنے منٹ پہلے موبائل سائلنٹ ہو؟</label>
-                      <select id="mouj-pre-select" style="width:100%; padding:10px; background:#0f172a; color:#f8fafc; border:1px solid #334155; border-radius:8px; font-family:inherit; font-size:14px; margin-bottom:10px;">
+                      <select id="mouj-pre-select" style="width:100%; padding:10px; background:#0f172a; color:#f8fafc; border:1px solid #334155; border-radius:8px; font-family:inherit; font-size:14px; margin-bottom:6px;">
                         <option value="smart">سمارٹ آٹو موڈ (فجر 15m، مغرب 4m، جمعہ 20m، باقی 10m)</option>
                         <option value="10">ہر نماز میں جماعت سے 10 منٹ پہلے</option>
                         <option value="15">ہر نماز میں جماعت سے 15 منٹ پہلے</option>
@@ -75,30 +81,16 @@ jobs:
                         <option value="20">ہر نماز میں جماعت سے 20 منٹ پہلے</option>
                         <option value="30">اذان کے ساتھ (جماعت سے 30 منٹ قبل)</option>
                       </select>
-                      <label style="display:flex; align-items:center; gap:8px; color:#38bdf8; font-size:13px; cursor:pointer; margin-top:6px;">
-                        <input type="checkbox" id="mouj-status-icon" style="width:18px; height:18px; accent-color:#0284c7;">
-                        <span>اسکرین کے اوپر (Status Bar) میں ایپ چلنے کا آئیکن دکھائیں</span>
-                      </label>
                     `;
                     sel.parentNode.insertBefore(wrapper, sel);
 
                     const preSelect = document.getElementById('mouj-pre-select');
-                    const statusToggle = document.getElementById('mouj-status-icon');
-
                     preSelect.value = localStorage.getItem('mouj_pre_mode') || 'smart';
-                    statusToggle.checked = localStorage.getItem('mouj_status_icon') === 'true';
 
                     preSelect.addEventListener('change', () => {
                       localStorage.setItem('mouj_pre_mode', preSelect.value);
                       window._lastSmartPayload = "";
                       syncSmartAlarms();
-                    });
-
-                    statusToggle.addEventListener('change', () => {
-                      localStorage.setItem('mouj_status_icon', statusToggle.checked);
-                      if (window.AndroidSilentBridge && window.AndroidSilentBridge.toggleStatusIcon) {
-                        window.AndroidSilentBridge.toggleStatusIcon(statusToggle.checked);
-                      }
                     });
                   }
                 });
@@ -264,9 +256,9 @@ jobs:
                 injectCustomUI();
                 syncSmartAlarms();
               }
-            }, 6000);
+            }, 5000);
 
-            window.addEventListener('load', () => { setTimeout(() => { injectCustomUI(); syncSmartAlarms(); }, 1200); });
+            window.addEventListener('load', () => { setTimeout(() => { injectCustomUI(); syncSmartAlarms(); }, 1000); });
             document.addEventListener('click', () => { setTimeout(() => { injectCustomUI(); syncSmartAlarms(); }, 400); });
           })();
           </script>
@@ -298,15 +290,15 @@ jobs:
       - name: Configure Native Permissions in Manifest
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
-          sed -i 's/<application/<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" \/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.WAKE_LOCK" \/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" \/>\n    <application/' "$MANIFEST"
+          sed -i 's/<application/<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM" \/>\n    <uses-permission android:name="android.permission.WAKE_LOCK" \/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" \/>\n    <application/' "$MANIFEST"
           sed -i 's/<\/application>/<receiver android:name=".PrayerAlarmReceiver" android:enabled="true" android:exported="false" \/>\n    <\/application>/' "$MANIFEST"
 
-      - name: Create Smart Alarm Receiver & Bridge
+      - name: Create 6-Nov Proven Alarm Receiver & Bridge
         run: |
           PKG_DIR="android/app/src/main/java/com/dreamavenue/mosqueclock"
           mkdir -p "$PKG_DIR"
           
-          # 1. PrayerAlarmReceiver.java
+          # 1. PrayerAlarmReceiver.java (Exact 6-Nov Proven Structure)
           cat << 'EOF' > "$PKG_DIR/PrayerAlarmReceiver.java"
           package com.dreamavenue.mosqueclock;
 
@@ -320,19 +312,6 @@ jobs:
           import java.util.Calendar;
 
           public class PrayerAlarmReceiver extends BroadcastReceiver {
-              private void setSafeAlarm(AlarmManager am, long triggerAtMillis, PendingIntent pi) {
-                  if (am == null) return;
-                  try {
-                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                          am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
-                      } else {
-                          am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
-                      }
-                  } catch (SecurityException se) {
-                      try { am.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi); } catch (Exception ignored) {}
-                  } catch (Exception ignored) {}
-              }
-
               @Override
               public void onReceive(Context context, Intent intent) {
                   if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
@@ -340,18 +319,25 @@ jobs:
                   if (nm == null || !nm.isNotificationPolicyAccessGranted()) return;
 
                   String action = intent.getStringExtra("ACTION_TYPE");
-                  int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
-
                   if ("START_SILENT".equals(action)) {
-                      try { nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE); } catch (Exception ignored) {}
-                      int durationMins = intent.getIntExtra("DURATION_MINS", 25);
+                      nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+                      int durationMins = intent.getIntExtra("DURATION_MINS", 20);
                       
                       AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                       Intent restoreIntent = new Intent(context, PrayerAlarmReceiver.class);
                       restoreIntent.putExtra("ACTION_TYPE", "STOP_SILENT");
-                      PendingIntent pi = PendingIntent.getBroadcast(context, 9999, restoreIntent, flags);
+                      PendingIntent pi = PendingIntent.getBroadcast(
+                          context, 9999, restoreIntent,
+                          PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                      );
                       long restoreTime = System.currentTimeMillis() + (Math.max(1, durationMins) * 60L * 1000L);
-                      setSafeAlarm(am, restoreTime, pi);
+                      if (am != null) {
+                          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                              am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, restoreTime, pi);
+                          } else {
+                              am.setExact(AlarmManager.RTC_WAKEUP, restoreTime, pi);
+                          }
+                      }
 
                       int hour = intent.getIntExtra("HOUR", -1);
                       int minute = intent.getIntExtra("MINUTE", -1);
@@ -371,23 +357,26 @@ jobs:
                           nextIntent.putExtra("MINUTE", minute);
                           nextIntent.putExtra("REQ_CODE", reqCode);
 
-                          PendingIntent nextPi = PendingIntent.getBroadcast(context, reqCode, nextIntent, flags);
-                          setSafeAlarm(am, nextCal.getTimeInMillis(), nextPi);
+                          PendingIntent nextPi = PendingIntent.getBroadcast(
+                              context, reqCode, nextIntent,
+                              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                          );
+                          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                              am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextCal.getTimeInMillis(), nextPi);
+                          }
                       }
                   } else if ("STOP_SILENT".equals(action)) {
-                      try { nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL); } catch (Exception ignored) {}
+                      nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
                   }
               }
           }
           EOF
 
-          # 2. MainActivity.java
+          # 2. MainActivity.java (Exact 6-Nov Proven Structure + 2-Min Test Fix + Smart Alarms)
           cat << 'EOF' > "$PKG_DIR/MainActivity.java"
           package com.dreamavenue.mosqueclock;
 
           import android.app.AlarmManager;
-          import android.app.Notification;
-          import android.app.NotificationChannel;
           import android.app.NotificationManager;
           import android.app.PendingIntent;
           import android.content.Context;
@@ -415,19 +404,6 @@ jobs:
                   Context mContext;
                   SilentBridge(Context c) { mContext = c; }
 
-                  private void scheduleSafe(AlarmManager am, long timeMillis, PendingIntent pi) {
-                      if (am == null) return;
-                      try {
-                          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                              am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeMillis, pi);
-                          } else {
-                              am.setExact(AlarmManager.RTC_WAKEUP, timeMillis, pi);
-                          }
-                      } catch (SecurityException se) {
-                          try { am.set(AlarmManager.RTC_WAKEUP, timeMillis, pi); } catch (Exception ignored) {}
-                      } catch (Exception ignored) {}
-                  }
-
                   @JavascriptInterface
                   public void requestPermissions() {
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -445,34 +421,6 @@ jobs:
                   }
 
                   @JavascriptInterface
-                  public void toggleStatusIcon(boolean show) {
-                      try {
-                          NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                          if (nm == null) return;
-                          String chanId = "masjid_active_indicator";
-                          if (show) {
-                              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                  NotificationChannel ch = new NotificationChannel(chanId, "Masjid Clock Active", NotificationManager.IMPORTANCE_LOW);
-                                  ch.setShowBadge(false);
-                                  nm.createNotificationChannel(ch);
-                              }
-                              Intent openIntent = new Intent(mContext, MainActivity.class);
-                              PendingIntent pi = PendingIntent.getActivity(mContext, 0, openIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-                              Notification.Builder b = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ?
-                                  new Notification.Builder(mContext, chanId) : new Notification.Builder(mContext);
-                              b.setContentTitle("مسجد کلاک آٹو سائلنٹ فعال ہے")
-                               .setContentText("نماز کے اوقات میں فون خودکار سائلنٹ ہو جائے گا • MOUJ Digital")
-                               .setSmallIcon(mContext.getApplicationInfo().icon)
-                               .setContentIntent(pi)
-                               .setOngoing(true);
-                              nm.notify(7788, b.build());
-                          } else {
-                              nm.cancel(7788);
-                          }
-                      } catch (Exception ignored) {}
-                  }
-
-                  @JavascriptInterface
                   public void setSilentMode(boolean enable, int durationMins, String prayerLabel) {
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                           NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -485,19 +433,30 @@ jobs:
                                   PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
                               );
                               if (enable) {
-                                  try { nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE); } catch (Exception ignored) {}
-                                  long restoreTime = System.currentTimeMillis() + (Math.max(1, durationMins) * 60L * 1000L);
-                                  scheduleSafe(am, restoreTime, pi);
+                                  nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+                                  // اگر صارف نے ٹیسٹ بٹن دبایا ہے تو اسے 20 کی بجائے صرف 2 منٹ پر رکھنا
+                                  int actualMins = (prayerLabel != null && (prayerLabel.contains("ٹیسٹ") || prayerLabel.toLowerCase().contains("test"))) ? 2 : Math.max(1, durationMins);
+                                  long restoreTime = System.currentTimeMillis() + (actualMins * 60L * 1000L);
+                                  if (am != null) {
+                                      am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, restoreTime, pi);
+                                  }
+                                  new Handler(Looper.getMainLooper()).post(() ->
+                                      Toast.makeText(mContext, "Silent Mode ON for " + actualMins + " mins", Toast.LENGTH_SHORT).show()
+                                  );
                               } else {
                                   if (am != null) am.cancel(pi);
-                                  try { nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL); } catch (Exception ignored) {}
+                                  nm.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
                               }
+                          } else {
+                              requestPermissions();
                           }
                       }
                   }
 
                   @JavascriptInterface
-                  public void scheduleDailyAlarms(String csvTimes, int durationMins) { }
+                  public void scheduleDailyAlarms(String csvTimes, int durationMins) {
+                      // Handled by scheduleSmartAlarms
+                  }
 
                   @JavascriptInterface
                   public void scheduleSmartAlarms(String jsonString) {
@@ -506,10 +465,12 @@ jobs:
                           if (am == null || jsonString == null || jsonString.isEmpty()) return;
 
                           int baseCode = 2000;
-                          int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
                           for (int i = 0; i < 15; i++) {
                               Intent cancelIntent = new Intent(mContext, PrayerAlarmReceiver.class);
-                              PendingIntent cancelPi = PendingIntent.getBroadcast(mContext, baseCode + i, cancelIntent, flags);
+                              PendingIntent cancelPi = PendingIntent.getBroadcast(
+                                  mContext, baseCode + i, cancelIntent,
+                                  PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                              );
                               am.cancel(cancelPi);
                           }
 
@@ -540,8 +501,15 @@ jobs:
                               alarmIntent.putExtra("MINUTE", cal.get(Calendar.MINUTE));
                               alarmIntent.putExtra("REQ_CODE", baseCode + i);
 
-                              PendingIntent pi = PendingIntent.getBroadcast(mContext, baseCode + i, alarmIntent, flags);
-                              scheduleSafe(am, cal.getTimeInMillis(), pi);
+                              PendingIntent pi = PendingIntent.getBroadcast(
+                                  mContext, baseCode + i, alarmIntent,
+                                  PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                              );
+                              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                  am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+                              } else {
+                                  am.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+                              }
                           }
                       } catch (Exception ignored) {}
                   }
