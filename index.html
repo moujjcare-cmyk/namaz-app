@@ -1124,10 +1124,10 @@
                     </div>
                 </div>
 
-                <!-- Month Editor for Optional Mosques -->
+                <!-- Month Viewer / Editor (IMD Date-Wise Board vs 12-Month Custom Editor) -->
                 <div class="inner-box p-3">
-                    <label class="block text-amber-300 font-bold mb-1.5">کسی بھی مہینے کا طے شدہ وقت دیکھیں یا آپشنل مسجد کے لیے بدلیں:</label>
-                    <select id="yearly-month-select" class="spacious-input mb-3" onchange="renderYearlyMonthEditor()">
+                    <label id="lbl-yearly-month-heading" class="block text-amber-300 font-bold mb-1.5">مہینہ منتخب کریں (ڈریم ایونیو کا تاریخ وار بورڈ چارٹ):</label>
+                    <select id="yearly-month-select" class="spacious-input mb-3 font-bold" onchange="renderYearlyMonthEditor()">
                         <option value="0" class="bg-gray-900">جنوری (January)</option>
                         <option value="1" class="bg-gray-900">فروری (February)</option>
                         <option value="2" class="bg-gray-900">مارچ (March)</option>
@@ -1142,9 +1142,13 @@
                         <option value="11" class="bg-gray-900">دسمبر (December)</option>
                     </select>
 
+                    <!-- IMD Date-Wise Transitions Box (Shown when imd_board is selected) -->
+                    <div id="imd-board-month-view" class="mb-2"></div>
+
+                    <!-- 6 Prayer Inputs (Editable in monthly_12 mode, Read-only preview of active times in imd_board mode) -->
                     <div id="yearly-month-fields" class="grid grid-cols-2 gap-2.5 text-center"></div>
 
-                    <button onclick="applySelectedMonthToCurrent()" class="mt-3 w-full spacious-btn bg-cyan-500 text-black font-bold rounded-lg text-xs">
+                    <button id="btn-apply-yearly-month" onclick="applySelectedMonthToCurrent()" class="mt-3 w-full spacious-btn bg-cyan-500 text-black font-bold rounded-lg text-xs">
                         ✅ اس مہینے کا شیڈول محفوظ اور لاگو کریں
                     </button>
                 </div>
@@ -2224,7 +2228,7 @@
             { fajr: "04:50", zuhr: "13:30", asr: "17:00", maghrib: "18:45", isha: "20:30", jumma: "13:30" },
             { fajr: "05:10", zuhr: "13:30", asr: "16:30", maghrib: "18:10", isha: "19:45", jumma: "13:30" },
             { fajr: "05:30", zuhr: "13:30", asr: "16:00", maghrib: "17:35", isha: "19:00", jumma: "13:30" },
-            { fajr: "05:40", zuhr: "13:30", asr: "15:45", maghrib: "17:17", isha: "19:00", jumma: "13:30" },
+            { fajr: "05:50", zuhr: "13:30", asr: "15:45", maghrib: "17:09", isha: "19:00", jumma: "13:30" },
             { fajr: "06:10", zuhr: "13:30", asr: "16:00", maghrib: "17:05", isha: "19:00", jumma: "13:30" }
         ];
 
@@ -2537,49 +2541,70 @@
             } catch (e) {}
         }
 
+        function getBridgeObj() {
+            return window.AndroidDndBridge || window.AndroidSilentBridge || null;
+        }
+
         function requestAndroidDndPermission() {
-            const statusEl = document.getElementById("android-perm-status");
-            if (window.AndroidDndBridge && typeof window.AndroidDndBridge.openDndSettings === "function") {
-                window.AndroidDndBridge.openDndSettings();
-            } else if (window.AndroidSilentBridge && typeof window.AndroidSilentBridge.requestPermissions === "function") {
-                window.AndroidSilentBridge.requestPermissions();
-            } else if (statusEl) {
-                statusEl.innerText = "ℹ️ گٹ ہب APK میں یہ بٹن براہِ راست اینڈرائیڈ کی Do Not Disturb سیٹنگ کھولتا ہے۔";
+            const br = getBridgeObj();
+            if (br && typeof br.openDndSettings === "function") {
+                br.openDndSettings();
+                setTimeout(checkAndroidPermissionsStatus, 600);
+            } else if (br && typeof br.requestPermissions === "function") {
+                br.requestPermissions();
+                setTimeout(checkAndroidPermissionsStatus, 600);
+            } else {
+                checkAndroidPermissionsStatus("1️⃣ ڈو ناٹ ڈسٹرب (DND) بٹن: موبائل APK میں یہ بٹن DND سیٹنگ کھولتا ہے۔");
             }
         }
 
         function requestAndroidBatteryExemption() {
-            const statusEl = document.getElementById("android-perm-status");
-            if (window.AndroidDndBridge && typeof window.AndroidDndBridge.requestIgnoreBatteryOptimizations === "function") {
-                window.AndroidDndBridge.requestIgnoreBatteryOptimizations();
-            } else if (statusEl) {
-                statusEl.innerText = "ℹ️ گٹ ہب APK میں یہ بٹن بیٹری سیور استثنیٰ (Don't Optimise) کھولتا ہے۔";
+            const br = getBridgeObj();
+            if (br && typeof br.requestIgnoreBatteryOptimizations === "function") {
+                br.requestIgnoreBatteryOptimizations();
+                setTimeout(checkAndroidPermissionsStatus, 600);
+            } else {
+                checkAndroidPermissionsStatus("2️⃣ بیٹری سیور استثنیٰ: موبائل APK میں یہ بٹن Battery Unrestricted سیٹنگ کھولتا ہے۔");
             }
         }
 
         function requestAndroidExactAlarmPermission() {
-            const statusEl = document.getElementById("android-perm-status");
-            if (window.AndroidDndBridge && typeof window.AndroidDndBridge.openExactAlarmSettings === "function") {
-                window.AndroidDndBridge.openExactAlarmSettings();
-            } else if (statusEl) {
-                statusEl.innerText = "ℹ️ گٹ ہب APK میں یہ بٹن Alarms & Reminders کی سیٹنگ کھولتا ہے۔";
+            const br = getBridgeObj();
+            if (br && typeof br.openExactAlarmSettings === "function") {
+                br.openExactAlarmSettings();
+                setTimeout(checkAndroidPermissionsStatus, 600);
+            } else {
+                checkAndroidPermissionsStatus("3️⃣ بیک گراؤنڈ الارم: موبائل APK میں یہ بٹن Alarms & Reminders سیٹنگ کھولتا ہے۔");
             }
         }
 
-        function checkAndroidPermissionsStatus() {
+        function checkAndroidPermissionsStatus(fallbackMsg) {
             const statusEl = document.getElementById("android-perm-status");
             if (!statusEl) return;
             statusEl.classList.remove("hidden");
-            if (window.AndroidDndBridge && typeof window.AndroidDndBridge.getPermissionsStatus === "function") {
+            const br = getBridgeObj();
+            if (br && typeof br.getPermissionsStatus === "function") {
                 try {
-                    const st = JSON.parse(window.AndroidDndBridge.getPermissionsStatus());
-                    statusEl.innerHTML = `DND: <b>${st.dnd ? '✅ آن' : '❌ آف'}</b> &nbsp;|&nbsp; Battery: <b>${st.battery ? '✅ آن' : '❌ آف'}</b> &nbsp;|&nbsp; Alarm: <b>${st.exactAlarm ? '✅ آن' : '❌ آف'}</b>`;
+                    const st = JSON.parse(br.getPermissionsStatus());
+                    const allOk = st.dnd && st.battery && st.exactAlarm;
+                    statusEl.innerHTML = `
+                        <div class="font-bold mb-1 ${allOk ? 'text-emerald-300' : 'text-amber-300'}">
+                            ${allOk ? '✅ ماشاءاللہ! تینوں اجازتیں مکمل طور پر آن ہیں:' : '⚠️ اجازتوں کی موجودہ حالت (جو آف ہو اس کے بٹن پر کلک کریں):'}
+                        </div>
+                        <div class="flex justify-around items-center text-[11px] pt-1 border-t border-slate-700">
+                            <span>1. DND: <b>${st.dnd ? '✅ آن' : '❌ آف'}</b></span>
+                            <span>2. Battery: <b>${st.battery ? '✅ آن' : '❌ آف'}</b></span>
+                            <span>3. Alarm: <b>${st.exactAlarm ? '✅ آن' : '❌ آف'}</b></span>
+                        </div>
+                    `;
                     return;
                 } catch (e) {}
             }
-            statusEl.innerText = state.lang === "ur"
-                ? "✅ آٹو سائلنٹ گارڈ اور الرٹ سسٹم فعال ہے۔"
-                : "✅ Auto-Silent guard and alert system is active.";
+            statusEl.innerText = typeof fallbackMsg === "string" && fallbackMsg
+                ? fallbackMsg
+                : (state.lang === "ur"
+                    ? "✅ آٹو سائلنٹ گارڈ فعال ہے (موبائل APK میں یہاں تینوں پرمیشنز کا لائیو اسٹیٹس نظر آتا ہے)۔"
+                    : "✅ Auto-Silent guard is active.");
         }
 
         function triggerTestSilentMode() {
@@ -2966,7 +2991,10 @@
         function changeJamaatAutoMode() {
             const m = state.mosques[state.activeMosque];
             m.jamaatAutoMode = document.getElementById("select-jamaat-auto-mode").value;
+            const slotSel = document.getElementById("select-slot-auto-mode");
+            if (slotSel) slotSel.value = m.jamaatAutoMode;
             saveState();
+            renderYearlyMonthEditor();
             renderAll();
         }
 
@@ -2974,21 +3002,95 @@
             const m = state.mosques[state.activeMosque];
             m.ramadanRule = document.getElementById("chk-ramadan-rule").checked;
             saveState();
+            renderYearlyMonthEditor();
             renderAll();
         }
 
         function renderYearlyMonthEditor() {
             const m = state.mosques[state.activeMosque];
+            const mode = document.getElementById("select-jamaat-auto-mode")
+                ? document.getElementById("select-jamaat-auto-mode").value
+                : (m.jamaatAutoMode || "imd_board");
             const mIdx = parseInt(document.getElementById("yearly-month-select").value, 10);
-            const sched = m.yearlySchedule[mIdx];
             const t = I18N[state.lang].prayers;
             const keys = ["fajr", "zuhr", "asr", "maghrib", "isha", "jumma"];
-            document.getElementById("yearly-month-fields").innerHTML = keys.map(k => `
-                <div class="inner-box p-2">
-                    <label class="block text-[11px] text-gray-300 font-bold mb-1">${t[k]}</label>
-                    <input type="time" id="yr-inp-${k}" value="${sched[k]}" class="inner-box px-2 py-1 text-sm digital-font led-green w-full text-center">
-                </div>
-            `).join("");
+            const imdView = document.getElementById("imd-board-month-view");
+            const applyBtn = document.getElementById("btn-apply-yearly-month");
+            const headingEl = document.getElementById("lbl-yearly-month-heading");
+
+            if (mode === "imd_board") {
+                if (headingEl) {
+                    headingEl.innerText = state.lang === "ur"
+                        ? "📅 ڈریم ایونیو (IMD) کا تاریخ وار سالانہ بورڈ چارٹ:"
+                        : "📅 Dream Avenue (IMD) Date-Wise Annual Board Chart:";
+                }
+                const monthNum = mIdx + 1;
+                const monthTransitions = IMD_BOARD_TRANSITIONS.filter(item => Math.floor(item.doy / 100) === monthNum);
+                const now = new Date();
+                const sampleDate = (mIdx === now.getMonth())
+                    ? now
+                    : new Date(now.getFullYear(), mIdx, 15);
+                const sampleSolar = computeStartTimes(sampleDate, m);
+                const sampleBoard = getDreamAvenueBoardJamaat(sampleDate, sampleSolar, !!m.ramadanRule);
+
+                let transHtml = monthTransitions.map(tr => {
+                    const formattedT = tr.time.split("/").map(s => format12Hour(s.trim())).join(" / ");
+                    const isPassed = (mIdx === now.getMonth() && now.getDate() >= tr.day);
+                    return `
+                        <div class="flex justify-between items-center py-1.5 px-2.5 rounded bg-black/40 border ${isPassed ? 'border-emerald-500/40' : 'border-amber-500/40'} text-xs">
+                            <span class="font-bold ${isPassed ? 'text-emerald-300' : 'text-amber-300'}">📌 ${tr.day} ${tr.monthUr} سے:</span>
+                            <span class="text-gray-200 font-bold">${tr.prayer}</span>
+                            <span class="digital-font ${isPassed ? 'text-emerald-400' : 'text-yellow-300'} font-bold" dir="ltr">${formattedT}</span>
+                        </div>
+                    `;
+                }).join("");
+
+                if (!transHtml) {
+                    transHtml = `<div class="text-center text-gray-400 py-2 text-xs">اس مہینے میں پچھلا وقت برقرار رہتا ہے۔</div>`;
+                }
+
+                const dayLabel = (mIdx === now.getMonth())
+                    ? `آج (${now.getDate()} تاریخ) کے نافذ العمل اوقات:`
+                    : `اس مہینے (15 تاریخ) کے نافذ العمل اوقات:`;
+
+                if (imdView) {
+                    imdView.classList.remove("hidden");
+                    imdView.innerHTML = `
+                        <div class="flex flex-col gap-1.5 mb-3">
+                            <div class="text-[11px] text-cyan-300 font-bold mb-0.5">✨ اس مہینے میں بورڈ کی تاریخ وار تبدیلیاں:</div>
+                            ${transHtml}
+                            <div class="text-[11px] text-gray-400 mt-1">• ظہر و جمعہ سارا سال <span class="digital-font text-emerald-400" dir="ltr">01:30 PM</span> اور مغرب روزانہ غروبِ آفتاب کے <b>6 منٹ بعد</b> خودکار اپڈیٹ ہوتی ہے۔</div>
+                        </div>
+                        <div class="text-[11px] text-yellow-400 font-bold mb-1.5 text-center border-t border-slate-700 pt-2">${dayLabel}</div>
+                    `;
+                }
+                if (applyBtn) applyBtn.classList.add("hidden");
+
+                document.getElementById("yearly-month-fields").innerHTML = keys.map(k => `
+                    <div class="inner-box p-2">
+                        <label class="block text-[11px] text-gray-300 font-bold mb-1">${t[k]}</label>
+                        <div class="inner-box px-2 py-1.5 text-sm digital-font led-green w-full text-center font-bold" dir="ltr">${format12Hour(sampleBoard[k])}</div>
+                    </div>
+                `).join("");
+            } else {
+                if (headingEl) {
+                    headingEl.innerText = state.lang === "ur"
+                        ? "کسی بھی مہینے کا کسٹم وقت دیکھیں یا آپشنل مسجد کے لیے بدلیں:"
+                        : "View or edit custom monthly Jamaat times:";
+                }
+                if (imdView) {
+                    imdView.classList.add("hidden");
+                    imdView.innerHTML = "";
+                }
+                if (applyBtn) applyBtn.classList.remove("hidden");
+                const sched = m.yearlySchedule[mIdx];
+                document.getElementById("yearly-month-fields").innerHTML = keys.map(k => `
+                    <div class="inner-box p-2">
+                        <label class="block text-[11px] text-gray-300 font-bold mb-1">${t[k]}</label>
+                        <input type="time" id="yr-inp-${k}" value="${sched[k]}" class="inner-box px-2 py-1 text-sm digital-font led-green w-full text-center">
+                    </div>
+                `).join("");
+            }
         }
 
         function applySelectedMonthToCurrent() {
