@@ -195,6 +195,11 @@ jobs:
                   UnifiedBridge bridgeObj = new UnifiedBridge(this);
                   this.bridge.getWebView().addJavascriptInterface(bridgeObj, "AndroidSilentBridge");
                   this.bridge.getWebView().addJavascriptInterface(bridgeObj, "AndroidDndBridge");
+                  if (Build.VERSION.SDK_INT >= 33) {
+                      if (checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                          requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 1001);
+                      }
+                  }
               }
 
               public class UnifiedBridge {
@@ -293,7 +298,13 @@ jobs:
 
                   @JavascriptInterface
                   public void moveAppToBackground() {
-                      runOnUiThread(() -> moveTaskToBack(true));
+                      runOnUiThread(() -> {
+                          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                              finishAndRemoveTask();
+                          } else {
+                              finish();
+                          }
+                      });
                   }
 
                   @JavascriptInterface
