@@ -816,6 +816,594 @@
             box-shadow: 0 4px 16px rgba(0,0,0,0.6);
         }
 
+
+        /* === V5 EYE-COMFORT, LIGHT MODE HIGH-CONTRAST, SAFE FONT SCALING & ENGLISH LTR === */
+        /* Soft, eye-friendly highlight instead of harsh neon green */
+        .next-prayer-highlight {
+            border: 1.5px solid rgba(56, 189, 248, 0.72) !important;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.18), inset 0 0 6px rgba(56, 189, 248, 0.08) !important;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(16, 185, 129, 0.06)) !important;
+        }
+        body.theme-5 .next-prayer-highlight {
+            border: 1.5px solid #0284c7 !important;
+            box-shadow: 0 2px 10px rgba(2, 132, 199, 0.16) !important;
+            background: rgba(224, 242, 254, 0.7) !important;
+        }
+
+        /* Prevent WebView / system forced inversion from corrupting colors */
+        :root {
+            color-scheme: dark;
+        }
+        body.theme-5 {
+            color-scheme: light;
+            --bg-main: #eef2f6;
+            --bg-card: #ffffff;
+            --bg-inner: #f1f5f9;
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --accent-gold: #9a3412;
+            --led-red: #b91c1c;
+            --led-green: #047857;
+            --shadow-dark: #cbd5e1;
+            --shadow-light: #ffffff;
+            --border-col: #94a3b8;
+            --frame-border: #b45309;
+        }
+        /* High-contrast Light Mode text overrides so NO yellow/cyan/gray text washes out on white */
+        body.theme-5 .text-yellow-400,
+        body.theme-5 .text-yellow-300,
+        body.theme-5 .text-amber-400,
+        body.theme-5 .text-amber-300,
+        body.theme-5 .text-amber-200 {
+            color: #9a3412 !important;
+        }
+        body.theme-5 .text-cyan-400,
+        body.theme-5 .text-cyan-300,
+        body.theme-5 .text-cyan-200 {
+            color: #0369a1 !important;
+        }
+        body.theme-5 .text-emerald-400,
+        body.theme-5 .text-emerald-300 {
+            color: #047857 !important;
+        }
+        body.theme-5 .text-red-400,
+        body.theme-5 .text-red-300 {
+            color: #b91c1c !important;
+        }
+        body.theme-5 .text-purple-300 {
+            color: #6b21a8 !important;
+        }
+        body.theme-5 .text-gray-200,
+        body.theme-5 .text-gray-300 {
+            color: #1e293b !important;
+        }
+        body.theme-5 .text-gray-400 {
+            color: #475569 !important;
+        }
+        body.theme-5 .emboss-3d-text {
+            text-shadow: none !important;
+        }
+        body.theme-5 .led-red,
+        body.theme-5 .led-green {
+            text-shadow: none !important;
+        }
+        body.theme-5 .kalima-3d-banner {
+            background: linear-gradient(145deg, #1e293b, #0f172a) !important;
+            border-color: #b45309 !important;
+        }
+        body.theme-5 .kalima-arabic {
+            color: #fef08a !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.85) !important;
+        }
+        body.theme-5 #daily-ayah-arabic,
+        body.theme-5 #spiritual-arabic {
+            color: #0f172a !important;
+            text-shadow: none !important;
+        }
+        body.theme-5 select,
+        body.theme-5 input,
+        body.theme-5 option {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
+        body.theme-5 .bg-gray-900 {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
+        body.theme-5 .help-diagram-box,
+        body.theme-5 .demo-slide-box {
+            background: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.theme-5 .prayer-pill-btn {
+            background: #e2e8f0;
+            color: #334155;
+            border-color: #94a3b8;
+        }
+        body.theme-5 .prayer-pill-btn.active {
+            background: rgba(16, 185, 129, 0.18);
+            color: #065f46;
+            border-color: #059669;
+        }
+        body.theme-5.makruh-active .emboss-card {
+            background: #fef2f2 !important;
+            border-color: #dc2626 !important;
+        }
+        body.theme-5.makruh-active .inner-box {
+            background: #fff5f5 !important;
+            border-color: #fca5a5 !important;
+        }
+        body.theme-5 .mouj-footer-card {
+            background: #ffffff !important;
+            border-color: #94a3b8 !important;
+        }
+
+        /* Safe Overflow-Proof Elder-Friendly Font Scaling (No clipping/spilling) */
+        html.font-scale-normal { font-size: 16px; }
+        html.font-scale-large  { font-size: 18px; }
+        html.font-scale-xlarge { font-size: 20px; }
+
+        /* Ensure cards, buttons, and grid rows wrap cleanly at larger font scales */
+        .emboss-card, .inner-box, .modal-box, .settings-accordion, .help-visual-card {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        html.font-scale-large #clock-hm,
+        html.font-scale-xlarge #clock-hm {
+            font-size: 2.35rem !important;
+        }
+        html.font-scale-large .prayer-row-jamaat-btn,
+        html.font-scale-xlarge .prayer-row-jamaat-btn {
+            padding: 5px 7px !important;
+            font-size: 0.78rem !important;
+            white-space: nowrap;
+        }
+        html.font-scale-large .awal-sub-text,
+        html.font-scale-xlarge .awal-sub-text {
+            font-size: 0.72rem !important;
+        }
+        .awal-sub-text {
+            font-size: 11px;
+        }
+
+        /* Full English Mode (LTR content while Top Action Bar stays in fixed visual order) */
+        body.lang-en .ltr-content {
+            direction: ltr;
+            text-align: left;
+        }
+        body.lang-en .ltr-center {
+            direction: ltr;
+            text-align: center;
+        }
+        body.lang-en .acc-header {
+            direction: ltr;
+            text-align: left;
+        }
+        body.lang-en .acc-body {
+            direction: ltr;
+            text-align: left;
+        }
+        body.lang-en .help-visual-header,
+        body.lang-en .help-visual-body {
+            direction: ltr;
+            text-align: left;
+        }
+        body.lang-en .modal-box {
+            direction: ltr;
+        }
+        body.lang-en #tab-home,
+        body.lang-en #tab-sects,
+        body.lang-en #tab-nawafil,
+        body.lang-en #tab-analog,
+        body.lang-en .mouj-footer-card {
+            direction: ltr;
+        }
+        /* Keep Top Action Bar & Kalima Banner in fixed visual positions */
+        #top-action-bar-fixed {
+            direction: rtl !important;
+        }
+        .kalima-sticky-wrap {
+            direction: rtl !important;
+        }
+
+
+        /* === V5.1 LIGHT MODE CRISP CONTRAST & TOP QUICK A+ FONT BUTTON POLISH === */
+        body.theme-5 .nav-tab-active {
+            color: #9a3412 !important;
+            border-top: 3px solid #b45309 !important;
+            background: rgba(180, 83, 9, 0.1) !important;
+        }
+        body.theme-5 .bottom-nav {
+            background: #ffffff !important;
+            border-top: 1.5px solid #cbd5e1 !important;
+            box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.1) !important;
+        }
+        body.theme-5 .emboss-card {
+            background: #ffffff !important;
+            border: 1.5px solid #cbd5e1 !important;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+        }
+        body.theme-5 .inner-box {
+            background: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+        }
+        body.theme-5 .led-red {
+            color: #dc2626 !important;
+            font-weight: 800;
+        }
+        body.theme-5 .led-green {
+            color: #047857 !important;
+            font-weight: 800;
+        }
+        body.theme-5 .awal-sub-text {
+            color: #334155 !important;
+            font-weight: 600;
+        }
+        body.theme-5 .awal-sub-text .text-amber-300 {
+            color: #b45309 !important;
+            font-weight: 700;
+        }
+        body.theme-5 .kalima-neon-inner {
+            background: radial-gradient(circle at 30% 30%, #1e293b, #0f172a) !important;
+        }
+        /* Keep Jamaat time + pencil icon cleanly on one single line */
+        .prayer-row-jamaat-btn {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap !important;
+        }
+        /* Scale small labels clearly when Large or X-Large is chosen */
+        html.font-scale-large .text-\[11px\],
+        html.font-scale-large .text-\[10px\] {
+            font-size: 13px !important;
+        }
+        html.font-scale-xlarge .text-\[11px\],
+        html.font-scale-xlarge .text-\[10px\] {
+            font-size: 14.5px !important;
+        }
+        html.font-scale-large .awal-sub-text {
+            font-size: 12.5px !important;
+        }
+        html.font-scale-xlarge .awal-sub-text {
+            font-size: 13.5px !important;
+        }
+
+
+        /* === V5.2 STICKY KALIMA FONT BUTTON & TEXT-ONLY SCALING (NO BOX BLOAT) === */
+        .kalima-3d-banner {
+            padding: 8px 54px 8px 64px !important;
+        }
+        .kalima-font-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #1c252b, #070a0e);
+            border: 1.8px solid var(--accent-gold);
+            box-shadow: 0 0 8px rgba(162, 213, 242, 0.35), inset 2px 2px 4px #000000;
+            color: #fde047;
+            font-size: 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+        }
+        .kalima-font-btn:active {
+            transform: translateY(-50%) scale(0.92);
+        }
+        /* Keep root 16px so cards & boxes NEVER bloat when enlarging text */
+        html.font-scale-normal,
+        html.font-scale-large,
+        html.font-scale-xlarge {
+            font-size: 16px !important;
+        }
+
+        /* LARGE TEXT MODE (A+): Noticeably larger text inside compact boxes */
+        html.font-scale-large #active-mosque-heading { font-size: 1.3rem !important; }
+        html.font-scale-large #prayer-rows-container .emboss-3d-text { font-size: 1.12rem !important; }
+        html.font-scale-large #prayer-rows-container .led-red { font-size: 1.05rem !important; }
+        html.font-scale-large .prayer-row-jamaat-btn { font-size: 1.02rem !important; padding: 5px 8px !important; }
+        html.font-scale-large .awal-sub-text { font-size: 13px !important; }
+        html.font-scale-large #date-value-text,
+        html.font-scale-large #next-prayer-name,
+        html.font-scale-large #next-prayer-countdown { font-size: 1.05rem !important; }
+        html.font-scale-large #daily-ayah-arabic { font-size: 1.32rem !important; }
+        html.font-scale-large #daily-ayah-translation,
+        html.font-scale-large #mouj-dua-text,
+        html.font-scale-large #home-upcoming-change-text,
+        html.font-scale-large .help-visual-body,
+        html.font-scale-large .acc-title-main { font-size: 1.02rem !important; line-height: 1.85 !important; }
+
+        /* EXTRA LARGE TEXT MODE (A++): Maximum readability for elders without glasses */
+        html.font-scale-xlarge #active-mosque-heading { font-size: 1.48rem !important; }
+        html.font-scale-xlarge #prayer-rows-container .emboss-3d-text { font-size: 1.28rem !important; font-weight: 800 !important; }
+        html.font-scale-xlarge #prayer-rows-container .led-red { font-size: 1.18rem !important; }
+        html.font-scale-xlarge .prayer-row-jamaat-btn { font-size: 1.12rem !important; padding: 5px 8px !important; }
+        html.font-scale-xlarge .awal-sub-text { font-size: 14px !important; font-weight: 700 !important; }
+        html.font-scale-xlarge #date-value-text,
+        html.font-scale-xlarge #next-prayer-name,
+        html.font-scale-xlarge #next-prayer-countdown { font-size: 1.18rem !important; }
+        html.font-scale-xlarge #daily-ayah-arabic { font-size: 1.5rem !important; }
+        html.font-scale-xlarge #daily-ayah-translation,
+        html.font-scale-xlarge #mouj-dua-text,
+        html.font-scale-xlarge #home-upcoming-change-text,
+        html.font-scale-xlarge .help-visual-body,
+        html.font-scale-xlarge .acc-title-main { font-size: 1.15rem !important; line-height: 1.95 !important; }
+
+
+        /* === V5.3 SMART ASYMMETRIC PRAYER ROW GRID (EXTRA SPACE FOR AZAN, AWAL WAQT & JAMAAT) === */
+        .prayer-row-grid {
+            display: grid;
+            grid-template-columns: 26% 40% 34%;
+            gap: 4px;
+        }
+        .awal-sub-text {
+            white-space: nowrap;
+        }
+        html.font-scale-normal #prayer-rows-container .emboss-3d-text { font-size: 0.96rem !important; }
+        html.font-scale-normal #prayer-rows-container .led-red { font-size: 0.94rem !important; }
+        html.font-scale-normal .prayer-row-jamaat-btn { font-size: 0.92rem !important; }
+        html.font-scale-normal .awal-sub-text { font-size: 11.5px !important; }
+
+        html.font-scale-large #prayer-rows-container .emboss-3d-text { font-size: 1.12rem !important; font-weight: 800 !important; }
+        html.font-scale-large #prayer-rows-container .led-red { font-size: 1.12rem !important; font-weight: 800 !important; }
+        html.font-scale-large .prayer-row-jamaat-btn { font-size: 1.06rem !important; padding: 6px 8px !important; font-weight: 800 !important; }
+        html.font-scale-large .awal-sub-text { font-size: 12.5px !important; }
+
+        html.font-scale-xlarge #prayer-rows-container .emboss-3d-text { font-size: 1.24rem !important; font-weight: 800 !important; }
+        html.font-scale-xlarge #prayer-rows-container .led-red { font-size: 1.24rem !important; font-weight: 900 !important; }
+        html.font-scale-xlarge .prayer-row-jamaat-btn { font-size: 1.16rem !important; padding: 6px 8px !important; font-weight: 900 !important; }
+        html.font-scale-xlarge .awal-sub-text { font-size: 13.5px !important; font-weight: 700 !important; }
+
+
+        /* === V5.4 DECOUPLED DISPLAY MODE (DARK vs LIGHT) + INDEPENDENT COLOR SCHEMES === */
+        body.light-mode {
+            color-scheme: light;
+            --bg-main: #e8eef5;
+            --bg-card: #ffffff;
+            --bg-inner: #f4f7fb;
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --shadow-dark: #cbd5e1;
+            --shadow-light: #ffffff;
+            --border-col: #cbd5e1;
+        }
+        /* Independent Rich Color Accents in Light Mode (matching each of the 6 color schemes!) */
+        body.light-mode.theme-6 { --accent-gold: #0369a1; --frame-border: #0284c7; --led-red: #dc2626; --led-green: #047857; --bg-main: #e6f0f7; }
+        body.light-mode.theme-0 { --accent-gold: #334155; --frame-border: #475569; --led-red: #dc2626; --led-green: #15803d; --bg-main: #eaeef2; }
+        body.light-mode.theme-1 { --accent-gold: #9a3412; --frame-border: #d97706; --led-red: #b91c1c; --led-green: #047857; --bg-main: #fdf6e7; }
+        body.light-mode.theme-2 { --accent-gold: #065f46; --frame-border: #059669; --led-red: #be123c; --led-green: #047857; --bg-main: #e8f5ee; }
+        body.light-mode.theme-3 { --accent-gold: #1d4ed8; --frame-border: #2563eb; --led-red: #dc2626; --led-green: #047857; --bg-main: #e8f0fe; }
+        body.light-mode.theme-4 { --accent-gold: #78350f; --frame-border: #b45309; --led-red: #b91c1c; --led-green: #047857; --bg-main: #f5efe8; }
+
+        body.light-mode .emboss-card {
+            background: #ffffff !important;
+            border: 1.5px solid var(--frame-border) !important;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+        }
+        body.light-mode .inner-box {
+            background: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+        }
+        body.light-mode .next-prayer-highlight {
+            border: 2px solid var(--frame-border) !important;
+            box-shadow: 0 3px 12px rgba(2, 132, 199, 0.16) !important;
+            background: rgba(224, 242, 254, 0.65) !important;
+        }
+        body.light-mode .text-yellow-400,
+        body.light-mode .text-yellow-300,
+        body.light-mode .text-amber-400,
+        body.light-mode .text-amber-300,
+        body.light-mode .text-amber-200 { color: var(--accent-gold) !important; }
+        body.light-mode .text-cyan-400,
+        body.light-mode .text-cyan-300,
+        body.light-mode .text-cyan-200 { color: #0369a1 !important; }
+        body.light-mode .text-emerald-400,
+        body.light-mode .text-emerald-300 { color: #047857 !important; }
+        body.light-mode .text-red-400,
+        body.light-mode .text-red-300 { color: #dc2626 !important; }
+        body.light-mode .text-purple-300 { color: #6b21a8 !important; }
+        body.light-mode .text-gray-200,
+        body.light-mode .text-gray-300 { color: #1e293b !important; }
+        body.light-mode .text-gray-400 { color: #475569 !important; }
+        body.light-mode .emboss-3d-text,
+        body.light-mode .led-red,
+        body.light-mode .led-green { text-shadow: none !important; }
+        body.light-mode .led-red { color: var(--led-red) !important; font-weight: 800; }
+        body.light-mode .led-green { color: var(--led-green) !important; font-weight: 800; }
+        body.light-mode .awal-sub-text { color: #334155 !important; font-weight: 600; }
+        body.light-mode .awal-sub-text .text-amber-300 { color: var(--accent-gold) !important; font-weight: 700; }
+        body.light-mode .bottom-nav {
+            background: #ffffff !important;
+            border-top: 1.5px solid var(--frame-border) !important;
+            box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.1) !important;
+        }
+        body.light-mode .nav-tab-active {
+            color: var(--accent-gold) !important;
+            border-top: 3px solid var(--frame-border) !important;
+            background: rgba(15, 23, 42, 0.05) !important;
+        }
+        body.light-mode .kalima-3d-banner {
+            background: linear-gradient(145deg, #1e293b, #0f172a) !important;
+            border-color: var(--frame-border) !important;
+        }
+        body.light-mode .kalima-arabic {
+            color: #fef08a !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.85) !important;
+        }
+        body.light-mode #daily-ayah-arabic,
+        body.light-mode #spiritual-arabic {
+            color: #0f172a !important;
+            text-shadow: none !important;
+        }
+        body.light-mode select,
+        body.light-mode input,
+        body.light-mode option,
+        body.light-mode .bg-gray-900 {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
+        body.light-mode .help-diagram-box,
+        body.light-mode .demo-slide-box {
+            background: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode .prayer-pill-btn {
+            background: #e2e8f0;
+            color: #334155;
+            border-color: #94a3b8;
+        }
+        body.light-mode .prayer-pill-btn.active {
+            background: rgba(16, 185, 129, 0.18);
+            color: #065f46;
+            border-color: #059669;
+        }
+        body.light-mode.makruh-active .emboss-card {
+            background: #fef2f2 !important;
+            border-color: #dc2626 !important;
+        }
+        body.light-mode.makruh-active .inner-box {
+            background: #fff5f5 !important;
+            border-color: #fca5a5 !important;
+        }
+        body.light-mode .mouj-footer-card {
+            background: #ffffff !important;
+            border-color: var(--frame-border) !important;
+        }
+        /* Keep green active silent dot clean & crisp in Light Mode too */
+        body.light-mode .prayer-silent-ind.ind-on {
+            background: #16a34a;
+            border: 1.5px solid #15803d;
+            box-shadow: 0 0 6px rgba(22, 163, 74, 0.45);
+        }
+
+
+        /* === V5.5 RICH SOFT-PASTEL LIGHT MODE THEMES (FULL CARD & ROW PALETTES, HIGH-CONTRAST INK) === */
+        body.light-mode.theme-6 {
+            --bg-main: #d8eaf8;
+            --lm-card-bg: linear-gradient(180deg, #f4faff 0%, #e4f2fe 100%);
+            --lm-inner-bg: #eef7ff;
+            --lm-nav-bg: #ebf5ff;
+            --accent-gold: #0369a1;
+            --frame-border: #0284c7;
+            --led-red: #dc2626;
+            --led-green: #047857;
+        }
+        body.light-mode.theme-0 {
+            --bg-main: #dde4ec;
+            --lm-card-bg: linear-gradient(180deg, #f8fafc 0%, #e9eff6 100%);
+            --lm-inner-bg: #f1f5f9;
+            --lm-nav-bg: #eef2f7;
+            --accent-gold: #334155;
+            --frame-border: #475569;
+            --led-red: #dc2626;
+            --led-green: #15803d;
+        }
+        body.light-mode.theme-1 {
+            --bg-main: #f7ebd2;
+            --lm-card-bg: linear-gradient(180deg, #fffdf5 0%, #fdf3db 100%);
+            --lm-inner-bg: #fef9ea;
+            --lm-nav-bg: #fdf5df;
+            --accent-gold: #9a3412;
+            --frame-border: #d97706;
+            --led-red: #b91c1c;
+            --led-green: #047857;
+        }
+        body.light-mode.theme-2 {
+            --bg-main: #d4efe2;
+            --lm-card-bg: linear-gradient(180deg, #f3fcf7 0%, #e2f7ec 100%);
+            --lm-inner-bg: #ecfaf3;
+            --lm-nav-bg: #e6f7ee;
+            --accent-gold: #065f46;
+            --frame-border: #059669;
+            --led-red: #be123c;
+            --led-green: #047857;
+        }
+        body.light-mode.theme-3 {
+            --bg-main: #dce5fb;
+            --lm-card-bg: linear-gradient(180deg, #f5f8ff 0%, #e5edff 100%);
+            --lm-inner-bg: #eef3ff;
+            --lm-nav-bg: #e9f0ff;
+            --accent-gold: #1d4ed8;
+            --frame-border: #2563eb;
+            --led-red: #dc2626;
+            --led-green: #047857;
+        }
+        body.light-mode.theme-4 {
+            --bg-main: #f3e2d4;
+            --lm-card-bg: linear-gradient(180deg, #fffaf5 0%, #faecdf 100%);
+            --lm-inner-bg: #fdf4eb;
+            --lm-nav-bg: #faefe4;
+            --accent-gold: #7c2d12;
+            --frame-border: #c2410c;
+            --led-red: #b91c1c;
+            --led-green: #047857;
+        }
+
+        body.light-mode .emboss-card {
+            background: var(--lm-card-bg) !important;
+            border: 1.5px solid var(--frame-border) !important;
+            box-shadow: 0 5px 16px rgba(15, 23, 42, 0.1) !important;
+        }
+        body.light-mode .inner-box {
+            background: var(--lm-inner-bg) !important;
+            border: 1px solid rgba(100, 116, 139, 0.35) !important;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+        }
+        body.light-mode .bottom-nav {
+            background: var(--lm-nav-bg) !important;
+            border-top: 1.5px solid var(--frame-border) !important;
+        }
+        body.light-mode .mouj-footer-card {
+            background: var(--lm-card-bg) !important;
+            border-color: var(--frame-border) !important;
+        }
+
+        /* Subtle, eye-soothing Dawn-to-Dusk Soft Pastel Prayer Rows in Light Mode (High-Contrast Dark Text) */
+        body.light-mode .prayer-row-fajr {
+            background: linear-gradient(90deg, #e0ecff 0%, #eef4ff 60%, #e8e6ff 100%) !important;
+            border-color: #93c5fd !important;
+        }
+        body.light-mode .prayer-row-zuhr {
+            background: linear-gradient(90deg, #dcf4ff 0%, #f0faff 60%, #e0f2fe 100%) !important;
+            border-color: #7dd3fc !important;
+        }
+        body.light-mode .prayer-row-asr {
+            background: linear-gradient(90deg, #fef3dc 0%, #fffaf0 60%, #ffedd5 100%) !important;
+            border-color: #fdba74 !important;
+        }
+        body.light-mode .prayer-row-maghrib {
+            background: linear-gradient(90deg, #fce7ec 0%, #fff1f2 60%, #fae8ff 100%) !important;
+            border-color: #f9a8d4 !important;
+        }
+        body.light-mode .prayer-row-isha {
+            background: linear-gradient(90deg, #e0e7ff 0%, #eef2ff 60%, #dbeafe 100%) !important;
+            border-color: #818cf8 !important;
+        }
+        body.light-mode .prayer-row-jumma {
+            background: linear-gradient(90deg, #dcfce7 0%, #f0fdf4 60%, #fef9c3 100%) !important;
+            border-color: #6ee7b7 !important;
+        }
+        /* Active Next Prayer Row in Light Mode: clean crisp colored frame without hiding the pastel */
+        body.light-mode .prayer-row-card.next-prayer-highlight {
+            border: 2.2px solid var(--frame-border) !important;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14) !important;
+        }
+        body.light-mode .prayer-row-jamaat-btn {
+            background: rgba(255, 255, 255, 0.88) !important;
+            border: 1.2px solid rgba(4, 120, 87, 0.35) !important;
+        }
+
     </style>
 </head>
 <body class="theme-6">
@@ -845,11 +1433,14 @@
                     <div class="text-[11px] text-amber-300 kalima-arabic">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
                     <div class="text-base sm:text-lg font-bold kalima-arabic">لَا إِلٰهَ إِلَّا اللّٰهُ مُحَمَّدٌ رَّسُولُ اللّٰهِ</div>
                 </div>
+                <button type="button" id="btn-top-font-scale" onclick="cycleFontScale()" class="kalima-font-btn" dir="ltr" title="تحریر کا سائز بڑا یا چھوٹا کریں (A / A+ / A++)">
+                    <span id="kalima-font-txt" class="digital-font">A</span>
+                </button>
             </div>
         </div>
 
         <!-- 2. TOP ACTION HEADER -->
-        <div class="w-full max-w-md flex justify-between items-center mb-2.5 gap-1.5">
+        <div id="top-action-bar-fixed" class="w-full max-w-md flex justify-between items-center mb-2.5 gap-1.5">
             <div class="flex gap-1.5">
                 <button onclick="openModal('settings-modal')" class="inner-box px-3 py-1.5 text-xs font-bold text-yellow-400 flex items-center gap-1.5">
                     ⚙️ <span id="lbl-settings">سیٹنگز</span>
@@ -860,10 +1451,10 @@
             </div>
 
             <div class="flex gap-1.5">
-                <button onclick="cycleTheme()" class="inner-box px-3 py-1.5 text-xs font-bold text-amber-300 flex items-center gap-1">
+                <button onclick="cycleTheme()" class="inner-box px-2.5 py-1.5 text-xs font-bold text-amber-300 flex items-center gap-1">
                     🎨 <span id="lbl-theme">رنگ</span>
                 </button>
-                <button onclick="toggleLanguage()" class="inner-box px-3 py-1.5 text-xs font-bold text-emerald-400 digital-font" id="btn-lang">
+                <button onclick="toggleLanguage()" class="inner-box px-2.5 py-1.5 text-xs font-bold text-emerald-400 digital-font" id="btn-lang">
                     EN
                 </button>
             </div>
@@ -938,10 +1529,10 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-3 items-center mb-2 pb-1 text-xs">
+                <div class="prayer-row-grid items-center mb-2 pb-1 text-xs">
                     <span class="font-bold text-gray-400" id="col-prayer">نماز</span>
                     <span class="font-bold text-red-400 text-center" id="col-azan">اذانِ مسجد (اول وقت)</span>
-                    <span class="font-bold text-emerald-400 text-end" id="col-jamaat">جماعت (مسجد)</span>
+                    <span class="font-bold text-emerald-400 text-center" id="col-jamaat">جماعت (مسجد)</span>
                 </div>
 
                 <div id="prayer-rows-container" class="flex flex-col gap-2.5"></div>
@@ -1526,7 +2117,27 @@
                             <input type="checkbox" id="chk-wakelock" class="w-5 h-5" onchange="toggleWakeLockSetting()">
                         </div>
 
-                        <label class="block text-gray-200 font-bold mb-2">کلر اسکیم (7 تھیمز — موج سنک سمیت):</label>
+                        <!-- Elder-Friendly Font Size Control -->
+                        <div class="mb-3 pb-2.5 border-b">
+                            <label id="lbl-font-size-title" class="block text-yellow-400 font-bold mb-1.5">🔠 تحریر کا سائز (بزرگوں اور آسان مطالعے کے لیے):</label>
+                            <div class="grid grid-cols-3 gap-2 text-xs">
+                                <button type="button" id="btn-font-normal" onclick="setFontScale('normal')" class="spacious-btn inner-box font-bold text-gray-200">نارمل (A)</button>
+                                <button type="button" id="btn-font-large" onclick="setFontScale('large')" class="spacious-btn inner-box font-bold text-amber-300">بڑا (A+)</button>
+                                <button type="button" id="btn-font-xlarge" onclick="setFontScale('xlarge')" class="spacious-btn inner-box font-bold text-emerald-300">بہت بڑا (A++)</button>
+                            </div>
+                        </div>
+
+                        <!-- 3-Option Display Mode (Auto System / Always Dark / Always Light) -->
+                        <div class="mb-3 pb-2.5 border-b">
+                            <label id="lbl-display-mode-title" class="block text-yellow-400 font-bold mb-1.5">🌗 ڈسپلے موڈ (ڈارک / لائٹ / سسٹم کے مطابق):</label>
+                            <select id="select-display-mode" class="spacious-input font-bold" onchange="setDisplayMode(this.value)">
+                                <option value="dark" class="bg-gray-900">🌙 ہمیشہ ڈارک موڈ (موج سنک و ڈارک تھیمز)</option>
+                                <option value="auto" class="bg-gray-900">📱 سسٹم کے مطابق (موبائل لائٹ/ڈارک خودکار)</option>
+                                <option value="light" class="bg-gray-900">☀️ ہمیشہ لائٹ موڈ (روشن سفید بیک گراؤنڈ)</option>
+                            </select>
+                        </div>
+
+                        <label id="lbl-color-themes-title" class="block text-gray-200 font-bold mb-2">کلر اسکیم (ڈارک اور لائٹ دونوں موڈز میں الگ رنگ بدلیں):</label>
                         <button type="button" onclick="setTheme(6)" class="spacious-btn inner-box font-bold text-cyan-200 w-full mb-2 border border-cyan-300/60">
                             💎 موج سنک پلاٹینم (MOUJ SYNC — Obsidian & Aurora)
                         </button>
@@ -2775,9 +3386,13 @@
                         : `Phone is silenced until ${activePostMins} mins after Jamaat.`;
                 }
             } else {
+                const wasSilent = document.body.classList.contains("silent-mode-active");
                 updateKalimaRingVisualState(approachingWindow ? "warn" : "armed");
                 banner.classList.add("hidden");
                 document.body.classList.remove("silent-mode-active");
+                if (wasSilent) {
+                    setHardwareSilentMode(false, 0, "WindowEnded");
+                }
             }
         }
         /* ==========================================================================
@@ -3140,6 +3755,7 @@
             root.setAttribute("lang", state.lang);
             document.getElementById("btn-lang").innerText = state.lang === "ur" ? "EN" : "اردو";
 
+            applyEffectiveDisplayMode();
             for (let i = 0; i <= 6; i++) document.body.classList.remove(`theme-${i}`);
             document.body.classList.add(`theme-${state.themeIndex}`);
 
@@ -3177,7 +3793,8 @@
                 calBadge.innerText = state.lang === "ur" ? "📍 لاہور (Geo Sync)" : "📍 Lahore (Geo Sync)";
                 sectTag.innerText = state.lang === "ur" ? "دائمی نقشہ لاہور (جامعہ اشرفیہ)" : "Lahore Perpetual Chart";
             } else {
-                calBadge.innerText = state.lang === "ur" ? `📍 ${cityObj.nameUr} (Geo Sync)` : `📍 ${cityObj.nameEn} (Geo Sync)`;
+                const cLabel = state.lang === "ur" ? cityObj.nameUr : cityObj.nameEn;
+                calBadge.innerText = cLabel.includes("GPS") ? `📍 ${cLabel}` : `📍 ${cLabel} (Geo Sync)`;
                 sectTag.innerText = state.lang === "ur" ? `فلکیاتی (${cityObj.nameUr})` : `Astronomical (${cityObj.nameEn})`;
             }
 
@@ -3256,9 +3873,15 @@
             if (activeM.jamaatAutoMode === "imd_board" || (state.activeMosque === 0 && (!activeM.alert || !activeM.alert.isCustom))) {
                 const nextTr = getNextImdBoardTransition(now);
                 const formattedTimes = nextTr.time.split("/").map(s => format12Hour(s.trim())).join(" / ");
+                const trMonthEn = translateMonthUrToEn(nextTr.monthUr);
+                const trPrayerEn = translatePrayerUrToEn(nextTr.prayer);
+                const upPrefix = document.getElementById("lbl-upcoming-prefix");
+                const editBtn = document.getElementById("btn-edit-schedule");
+                if (upPrefix) upPrefix.innerText = state.lang === "ur" ? "🔔 اگلی تبدیلی:" : "🔔 Next Change:";
+                if (editBtn) editBtn.innerText = state.lang === "ur" ? "ترمیم" : "Edit";
                 upBanner.innerText = state.lang === "ur"
                     ? `${nextTr.day} ${nextTr.monthUr} سے ${nextTr.prayer} کی جماعت کا وقت ${formattedTimes} ہوگا (ڈریم ایونیو بورڈ)۔`
-                    : `From ${nextTr.day} ${nextTr.monthUr}, ${nextTr.prayer} Jamaat will be at ${formattedTimes} (IMD Board).`;
+                    : `From ${nextTr.day} ${trMonthEn}, ${trPrayerEn} Jamaat will be at ${formattedTimes} (IMD Board).`;
                 if (upBox) upBox.classList.remove("hidden");
             } else if (activeM.alert && activeM.alert.isCustom) {
                 const al = activeM.alert;
@@ -3294,7 +3917,7 @@
                     middleColHtml = `
                         <div onclick="openEditJamaatModal('${k}')" class="cursor-pointer text-center py-0.5">
                             <div class="digital-font led-red text-xs sm:text-sm font-bold" dir="ltr">${mosqueAzanStr}</div>
-                            <div class="text-[10px] text-gray-400 leading-relaxed mt-0.5">${t.awalLabel} <span class="digital-font text-amber-300" dir="ltr">${awalStr}</span></div>
+                            <div class="awal-sub-text text-gray-400 leading-relaxed mt-0.5">${t.awalLabel} <span class="digital-font text-amber-300" dir="ltr">${awalStr}</span></div>
                         </div>
                     `;
                 } else if (state.azanDisplayMode === "mosque_azan") {
@@ -3304,14 +3927,14 @@
                 }
 
                 return `
-                    <div class="inner-box px-3 py-2.5 grid grid-cols-3 items-center ${isNext ? 'next-prayer-highlight' : ''}">
+                    <div class="inner-box prayer-row-card prayer-row-${k} px-2.5 py-2.5 prayer-row-grid items-center ${isNext ? 'next-prayer-highlight' : ''}">
                         <div class="font-bold text-sm flex items-center gap-2">
                             ${getPrayerSilentBadgeHtml(k)}
                             <span class="leading-loose emboss-3d-text">${t.prayers[k]}</span>
                         </div>
                         ${middleColHtml}
-                        <div class="text-end">
-                            <button onclick="openEditJamaatModal('${k}')" class="inner-box px-2.5 py-1.5 digital-font led-green text-xs sm:text-sm font-bold" dir="ltr">
+                        <div class="text-center">
+                            <button onclick="openEditJamaatModal('${k}')" class="prayer-row-jamaat-btn inner-box px-2.5 py-1.5 digital-font led-green text-xs sm:text-sm font-bold" dir="ltr">
                                 ${jamaatStr} ✎
                             </button>
                         </div>
@@ -3373,6 +3996,8 @@
             renderQuote();
             renderDailyQuranAyah();
             renderHelpVisualTourStep();
+            applyFontScaleUI();
+            applyFullBilingualSettingsAndLayout();
             updateDisclaimerAndExitLanguageUI();
             updateDateDisplay();
         }
@@ -3492,13 +4117,24 @@
         }
 
         function setTheme(idx) {
+            if (idx === 5) {
+                setDisplayMode("light");
+                return;
+            }
             state.themeIndex = idx;
+            lastDarkThemeIndex = idx;
+            localStorage.setItem("smc_last_dark_theme", idx.toString());
             saveState();
             renderAll();
         }
 
+        const COLOR_SCHEME_ORDER = [6, 0, 1, 2, 3, 4];
+
         function cycleTheme() {
-            state.themeIndex = (state.themeIndex + 1) % 7;
+            const curPos = COLOR_SCHEME_ORDER.indexOf(state.themeIndex);
+            state.themeIndex = COLOR_SCHEME_ORDER[(curPos + 1) % COLOR_SCHEME_ORDER.length];
+            lastDarkThemeIndex = state.themeIndex;
+            localStorage.setItem("smc_last_dark_theme", state.themeIndex.toString());
             saveState();
             renderAll();
         }
@@ -3661,6 +4297,7 @@
             }
             saveState();
             syncNativeDndAlarms();
+            evaluateAutoSilentState(new Date(), state.mosques[state.activeMosque]);
             renderAll();
             closeModal("edit-time-modal");
         }
@@ -4456,6 +5093,137 @@
             }
         });
 
+
+        /* ==========================================================================
+           11. V5 FONT SCALE, 3-OPTION DISPLAY MODE & FULL ENGLISH LTR TRANSLATOR
+           ========================================================================== */
+        let currentFontScale = localStorage.getItem("smc_font_scale") || "normal";
+        let currentDisplayMode = localStorage.getItem("smc_display_mode") || "dark";
+        let lastDarkThemeIndex = parseInt(localStorage.getItem("smc_last_dark_theme") || "6", 10);
+
+        function translateMonthUrToEn(mUr) {
+            const map = {
+                "جنوری": "Jan", "فروری": "Feb", "مارچ": "Mar", "اپریل": "Apr",
+                "مئی": "May", "جون": "Jun", "جولائی": "Jul", "اگست": "Aug",
+                "ستمبر": "Sep", "اکتوبر": "Oct", "نومبر": "Nov", "دسمبر": "Dec"
+            };
+            return map[mUr] || mUr;
+        }
+
+        function translatePrayerUrToEn(pUr) {
+            let out = pUr || "";
+            const pairs = [
+                ["فجر", "Fajr"], ["ظہر", "Zuhr"], ["عصر", "Asr"],
+                ["مغرب", "Maghrib"], ["عشاء", "Isha"], ["جمعہ المبارک", "Jumu'ah"],
+                ["جمعہ", "Jumu'ah"], [" و ", " & "], ["، ", ", "]
+            ];
+            pairs.forEach(([u, e]) => { out = out.split(u).join(e); });
+            return out;
+        }
+
+        function applyFontScaleUI() {
+            const root = document.documentElement;
+            root.classList.remove("font-scale-normal", "font-scale-large", "font-scale-xlarge");
+            root.classList.add(`font-scale-${currentFontScale}`);
+
+            ["normal", "large", "xlarge"].forEach(sz => {
+                const btn = document.getElementById(`btn-font-${sz}`);
+                if (!btn) return;
+                btn.classList.toggle("next-prayer-highlight", sz === currentFontScale);
+            });
+            const topFontTxt = document.getElementById("kalima-font-txt");
+            if (topFontTxt) {
+                const mapLabel = { normal: "A", large: "A+", xlarge: "A++" };
+                topFontTxt.innerText = mapLabel[currentFontScale] || "A";
+            }
+        }
+
+        function setFontScale(scaleName) {
+            currentFontScale = scaleName;
+            localStorage.setItem("smc_font_scale", scaleName);
+            applyFontScaleUI();
+        }
+
+        function cycleFontScale() {
+            const order = ["normal", "large", "xlarge"];
+            const next = order[(order.indexOf(currentFontScale) + 1) % order.length];
+            setFontScale(next);
+        }
+
+        function applyEffectiveDisplayMode() {
+            const sel = document.getElementById("select-display-mode");
+            if (sel) sel.value = currentDisplayMode;
+
+            if (state.themeIndex === 5) {
+                state.themeIndex = (lastDarkThemeIndex === 5) ? 6 : lastDarkThemeIndex;
+            }
+
+            let isLight = false;
+            if (currentDisplayMode === "light") {
+                isLight = true;
+            } else if (currentDisplayMode === "auto") {
+                isLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+            }
+            document.body.classList.toggle("light-mode", isLight);
+        }
+
+        function setDisplayMode(mode) {
+            currentDisplayMode = mode;
+            localStorage.setItem("smc_display_mode", mode);
+            applyEffectiveDisplayMode();
+            saveState();
+            renderAll();
+        }
+
+        if (window.matchMedia) {
+            try {
+                window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+                    if (currentDisplayMode === "auto") {
+                        applyEffectiveDisplayMode();
+                        renderAll();
+                    }
+                });
+            } catch (e) {}
+        }
+
+        function applyFullBilingualSettingsAndLayout() {
+            const isEn = state.lang === "en";
+            document.body.classList.toggle("lang-en", isEn);
+
+            const setT = (id, ur, en) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = isEn ? en : ur;
+            };
+
+            setT("lbl-settings-modal-title", "⚙️ سیٹنگز اور کنٹرول پینل", "⚙️ Settings & Control Panel");
+            setT("lbl-settings-modal-sub", "جس حصے کو کھولنا ہو اس کے نام پر ٹیپ کریں", "Tap any section below to expand");
+            setT("acc-lbl-mosques-title", "مساجد (Mosque Sync)", "Mosque Sync (3 Slots)");
+            setT("acc-lbl-mosques-sub", "3 مساجد کے سلاٹس، نام، جماعت کا نظام اور فیورٹ (⭐)", "Manage 3 mosques, names, schedule & favorite (⭐)");
+            setT("acc-lbl-silent-title", "آٹو سائلنٹ (Auto Silent)", "Auto Silent (DND)");
+            setT("acc-lbl-silent-sub", "خودکار DND، نمازوں کا انتخاب، وقت اور 3 پرمیشنز", "Automatic DND, prayer selection, timing & permissions");
+            setT("acc-lbl-geo-title", "سفر و مقام (Geo Sync)", "Geo Sync (City & GPS)");
+            setT("acc-lbl-geo-sub", "دائمی نقشہ، پاکستان کے 55+ شہر اور آف لائن GPS پن", "Perpetual chart, 55+ cities & offline GPS pin");
+            setT("acc-lbl-mini-title", "منی ٹائمر (Mini Timer)", "Mini Timer (Lock Screen)");
+            setT("acc-lbl-mini-sub", "ایپ بند ہونے پر لاک اسکرین پر جماعت کا فلیکسیبل کاؤنٹ ڈاؤن", "Flexible lock-screen countdown before Jamaat");
+            setT("acc-lbl-style-title", "تزئین و مسلک (Style & Fiqh)", "Style, Font & Fiqh");
+            setT("acc-lbl-style-sub", "فقہی مسلک، فونٹ سائز، لائٹ/ڈارک موڈ اور 7 کلر تھیمز", "Fiqh school, elder font size, Light/Dark mode & themes");
+
+            setT("lbl-sec1-slot-head", "1. مسجد سلاٹ منتخب کریں، نام بدلیں اور فیورٹ (⭐) بنائیں:", "1. Select Mosque Slot, Rename & Set Favorite (⭐):");
+            setT("lbl-font-size-title", "🔠 تحریر کا سائز (بزرگوں اور آسان مطالعے کے لیے):", "🔠 Text Size (Elder-Friendly Reading):");
+            setT("btn-font-normal", "نارمل (A)", "Normal (A)");
+            setT("btn-font-large", "بڑا (A+)", "Large (A+)");
+            setT("btn-font-xlarge", "بہت بڑا (A++)", "X-Large (A++)");
+            setT("lbl-display-mode-title", "🌗 ڈسپلے موڈ (ڈارک / لائٹ / سسٹم کے مطابق):", "🌗 Display Mode (Dark / Light / Auto System):");
+            setT("lbl-color-themes-title", "کلر اسکیم (ڈارک اور لائٹ دونوں موڈز میں الگ رنگ بدلیں):", "Color Accents (Works in Both Dark & Light Mode):");
+
+            setT("lbl-sect-table-title", "تمام مسالک کے اول وقت اور جمعہ کا تقابلی نقشہ", "Start Times & Jumu'ah Comparison Across Schools");
+            setT("sect-col-prayer", "نماز", "Prayer");
+            setT("sect-col-deo", "حنفی دیوبندی", "Hanafi (Deo)");
+            setT("sect-col-bar", "حنفی بریلوی", "Hanafi (Bar)");
+            setT("sect-col-ahle", "اہلِ حدیث/شافعی", "Ahl-e-Hadith");
+            setT("sect-col-jaf", "فقہِ جعفریہ", "Fiqh Jafari");
+        }
+
         window.onload = () => {
             try {
                 const savedGps = JSON.parse(localStorage.getItem("smc_custom_gps"));
@@ -4463,6 +5231,8 @@
                     CITIES.custom_gps = savedGps;
                 }
             } catch (e) {}
+            applyEffectiveDisplayMode();
+            applyFontScaleUI();
             populateCitiesSelectDropdown("");
             renderPrayerSilentPillsInModal();
             updateSettingsAccordionBadges();
